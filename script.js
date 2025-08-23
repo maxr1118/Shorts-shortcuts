@@ -332,8 +332,76 @@ async function runAIAnalysis() {
     console.log('AI Analysis completed successfully'); // Debug log
 }
 
-// Enhanced Content Type Detection
-function detectContentType() {
+// Title and Hashtag Generation
+function generateTitleAndHashtags(contentType, analysis) {
+    const titleTemplates = {
+        'educational': [
+            'This Changes Everything!',
+            'Mind-Blowing Facts About',
+            'What They Never Told You',
+            'The Truth About',
+            'Shocking Discovery:'
+        ],
+        'entertainment': [
+            'You Won\'t Believe This!',
+            'Wait For It...',
+            'Plot Twist:',
+            'This Is Insane!',
+            'Unbelievable!'
+        ],
+        'tutorial': [
+            'Easy Way To',
+            'Quick Tutorial:',
+            'How I Fixed This',
+            'Simple Trick For',
+            'Life Hack:'
+        ],
+        'story': [
+            'True Story:',
+            'What Happened Next',
+            'My Experience With',
+            'The Day I',
+            'Real Talk:'
+        ],
+        'music': [
+            'New Beat Drop!',
+            'This Song Hits Different',
+            'Musical Magic',
+            'Rhythm Check',
+            'Beat That Slaps'
+        ],
+        'comedy': [
+            'Can\'t Stop Laughing',
+            'Comedy Gold:',
+            'This Is Too Funny',
+            'Hilarious Moment',
+            'Peak Comedy'
+        ]
+    };
+    
+    const hashtagSets = {
+        'educational': '#LearnSomething #Educational #MindBlown #Facts #Knowledge #Viral',
+        'entertainment': '#Viral #Trending #Entertainment #MustWatch #Amazing #ForYou',
+        'tutorial': '#Tutorial #LifeHack #HowTo #Tips #Learn #Helpful',
+        'story': '#TrueStory #Real #Experience #Life #Story #Honest',
+        'music': '#Music #Beat #Sound #Audio #Rhythm #Vibe',
+        'comedy': '#Funny #Comedy #Hilarious #Laugh #Humor #LOL'
+    };
+    
+    // Select random title template
+    const templates = titleTemplates[contentType] || titleTemplates['entertainment'];
+    const randomTitle = templates[Math.floor(Math.random() * templates.length)];
+    
+    // Add engagement booster based on score
+    const engagementBooster = analysis.score > 85 ? ' 🔥' : 
+                             analysis.score > 75 ? ' ⚡' : 
+                             analysis.score > 65 ? ' 🎯' : '';
+    
+    return {
+        title: randomTitle + engagementBooster,
+        hashtags: hashtagSets[contentType] || hashtagSets['entertainment']
+    };
+}
     // Simulate AI content analysis based on video characteristics
     const contentTypes = ['educational', 'entertainment', 'tutorial', 'story', 'music', 'comedy'];
     const weights = [0.15, 0.35, 0.12, 0.18, 0.08, 0.12]; // Entertainment most likely
@@ -567,8 +635,43 @@ function createFinalVideo() {
     elements.engagementScore.textContent = `${analysis.score}/100`;
     elements.retentionPrediction.textContent = `${Math.round(overlayImpact.expectedRetention)}%`;
     
+    // Add title and hashtags to results
+    if (analysis.titleAndHashtags) {
+        const titleHashtagsHTML = `
+            <div class="insight-item" style="border-bottom: none; flex-direction: column; align-items: flex-start;">
+                <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 8px;">
+                    <span class="insight-label">Suggested Title:</span>
+                </div>
+                <div style="color: #00f2fe; font-weight: 600; margin-bottom: 8px;">${analysis.titleAndHashtags.title}</div>
+                <div style="color: #ccc; font-size: 0.8rem;">${analysis.titleAndHashtags.hashtags}</div>
+                <button onclick="copyToClipboard('${analysis.titleAndHashtags.title}\\n${analysis.titleAndHashtags.hashtags}')" 
+                        style="margin-top: 8px; background: rgba(0,242,254,0.2); border: 1px solid rgba(0,242,254,0.4); 
+                               color: #00f2fe; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                    📋 Copy Title & Tags
+                </button>
+            </div>
+        `;
+        elements.resultCard.querySelector('.ai-insights').insertAdjacentHTML('beforeend', titleHashtagsHTML);
+    }
+    
     // Add platform-specific insights
     displayPlatformInsights(analysis);
+}
+
+// Copy to clipboard function
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showSuccessMessage('Title and hashtags copied to clipboard!');
+    }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showSuccessMessage('Title and hashtags copied!');
+    });
 }
 
 function displayPlatformInsights(analysis) {
