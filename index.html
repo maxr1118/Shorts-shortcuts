@@ -14,121 +14,237 @@
     <div class="container">
         <header class="header">
             <h1 class="logo">ShortCraft</h1>
-            <p class="tagline">AI-powered video editing for viral content</p>
+            <p class="tagline">AI finds the perfect clip automatically</p>
         </header>
 
-        <!-- Upload Section -->
+        <!-- Main Video Upload -->
         <section class="card">
-            <h2 class="section-title">📱 Upload Video</h2>
-            <div class="upload-zone" id="uploadZone">
-                <div class="upload-icon">🎬</div>
-                <div class="upload-text">Tap to select video</div>
-                <div class="upload-subtext">MP4, MOV up to 500MB</div>
+            <h2 class="section-title">🎬 Main Video</h2>
+            <div class="upload-zone" id="mainUploadZone">
+                <div class="upload-icon">📱</div>
+                <div class="upload-text">Upload your main video</div>
+                <div class="upload-subtext">AI will find the best moments</div>
             </div>
-            <input type="file" id="videoFile" class="file-input" accept="video/*">
+            <input type="file" id="mainVideoFile" class="file-input" accept="video/*">
             
-            <div class="progress-bar" id="progressBar">
+            <div class="progress-bar" id="mainProgressBar">
                 <div class="progress-fill"></div>
             </div>
 
-            <video class="video-preview" id="videoPreview" controls playsinline></video>
+            <video class="video-preview" id="mainVideoPreview" controls playsinline muted></video>
             
-            <div class="video-info" id="videoInfo">
+            <div class="video-info" id="mainVideoInfo">
                 <div class="info-row">
                     <span class="info-label">Duration:</span>
-                    <span class="info-value" id="videoDuration">--</span>
+                    <span class="info-value" id="mainVideoDuration">--</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">Size:</span>
-                    <span class="info-value" id="videoSize">--</span>
+                    <span class="info-label">AI Analysis:</span>
+                    <span class="info-value" id="aiAnalysis">Pending upload</span>
                 </div>
             </div>
         </section>
 
-        <!-- Trim Controls -->
-        <section class="card hidden" id="trimCard">
-            <h3 class="section-title">✂️ Trim Settings</h3>
+        <!-- Background Video Upload -->
+        <section class="card hidden" id="backgroundCard">
+            <h2 class="section-title">🎮 Background Video <span class="optional-badge">Optional</span></h2>
+            <p class="feature-desc">Add engaging background footage (like gameplay) to boost retention</p>
             
-            <div class="range-container">
-                <div class="range-label">
-                    <span>Start Time</span>
-                    <span id="startTime">0:00</span>
-                </div>
-                <input type="range" class="range-input" id="startRange" min="0" max="100" value="0">
+            <div class="upload-zone secondary" id="bgUploadZone">
+                <div class="upload-icon">🎯</div>
+                <div class="upload-text">Add background video</div>
+                <div class="upload-subtext">Subway Surfers, Minecraft, etc.</div>
             </div>
+            <input type="file" id="bgVideoFile" class="file-input" accept="video/*">
             
-            <div class="range-container">
-                <div class="range-label">
-                    <span>End Time</span>
-                    <span id="endTime">0:20</span>
+            <div class="progress-bar" id="bgProgressBar">
+                <div class="progress-fill"></div>
+            </div>
+
+            <video class="video-preview small" id="bgVideoPreview" controls playsinline muted></video>
+            
+            <div class="bg-options" id="bgOptions">
+                <div class="option-group">
+                    <label class="option-label">Background Style</label>
+                    <select id="bgStyle">
+                        <option value="bottom-half">Bottom Half (Recommended)</option>
+                        <option value="side-by-side">Side by Side</option>
+                        <option value="corner">Small Corner</option>
+                        <option value="full-blur">Full Background (Blurred)</option>
+                    </select>
                 </div>
-                <input type="range" class="range-input" id="endRange" min="0" max="100" value="20">
+                <div class="option-group">
+                    <label class="option-label">Opacity</label>
+                    <input type="range" id="bgOpacity" min="30" max="100" value="80" class="range-input">
+                    <span id="opacityValue">80%</span>
+                </div>
             </div>
         </section>
 
-        <!-- Subtitle Options -->
-        <section class="card hidden" id="subtitleCard">
-            <h3 class="section-title">💬 Subtitles</h3>
+        <!-- AI Settings -->
+        <section class="card hidden" id="aiCard">
+            <h2 class="section-title">🧠 AI Optimization</h2>
             
-            <div class="option-group">
-                <label class="option-label">Font Size</label>
-                <select id="fontSize">
-                    <option value="28">Small</option>
-                    <option value="36" selected>Medium</option>
-                    <option value="44">Large</option>
-                </select>
-            </div>
-            
-            <div class="option-group">
-                <label class="option-label">Style</label>
-                <div class="option-row">
-                    <input type="color" id="textColor" value="#ffffff">
-                    <div class="checkbox-container">
-                        <input type="checkbox" id="subtitleBg" checked>
-                        <span>Background</span>
+            <div class="ai-options">
+                <div class="option-group">
+                    <label class="option-label">Target Duration</label>
+                    <div class="duration-buttons">
+                        <button class="duration-btn active" data-duration="15">15s</button>
+                        <button class="duration-btn" data-duration="30">30s</button>
+                        <button class="duration-btn" data-duration="45">45s</button>
+                        <button class="duration-btn" data-duration="60">60s</button>
+                    </div>
+                </div>
+                
+                <div class="option-group">
+                    <label class="option-label">Content Type</label>
+                    <select id="contentType">
+                        <option value="auto">Auto-Detect</option>
+                        <option value="educational">Educational</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="tutorial">Tutorial/How-To</option>
+                        <option value="story">Storytelling</option>
+                        <option value="music">Music/Dance</option>
+                        <option value="comedy">Comedy</option>
+                    </select>
+                </div>
+
+                <div class="retention-features">
+                    <h4>🚀 Retention Boosters</h4>
+                    <div class="feature-toggles">
+                        <label class="toggle-item">
+                            <input type="checkbox" id="hookStart" checked>
+                            <span>Strong Hook Start</span>
+                            <small>Starts with most engaging moment</small>
+                        </label>
+                        <label class="toggle-item">
+                            <input type="checkbox" id="paceOptimization" checked>
+                            <span>Smart Pacing</span>
+                            <small>Removes dead air and slow parts</small>
+                        </label>
+                        <label class="toggle-item">
+                            <input type="checkbox" id="cliffhangers" checked>
+                            <span>Cliffhanger Cuts</span>
+                            <small>Ends at tension peaks</small>
+                        </label>
+                        <label class="toggle-item">
+                            <input type="checkbox" id="visualCues">
+                            <span>Visual Attention Cues</span>
+                            <small>Highlights important moments</small>
+                        </label>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Process Button -->
-        <section class="card hidden" id="processCard">
-            <button class="btn primary" id="processBtn">
-                ✨ Create Short Video
-            </button>
+        <!-- Subtitle Options -->
+        <section class="card hidden" id="subtitleCard">
+            <h2 class="section-title">💬 Subtitles</h2>
+            
+            <div class="option-group">
+                <label class="option-label">Style</label>
+                <div class="subtitle-presets">
+                    <button class="preset-btn active" data-preset="modern">
+                        <div class="preset-preview">Modern</div>
+                        <small>Clean, bold text</small>
+                    </button>
+                    <button class="preset-btn" data-preset="gaming">
+                        <div class="preset-preview gaming">Gaming</div>
+                        <small>Bright, outlined</small>
+                    </button>
+                    <button class="preset-btn" data-preset="minimal">
+                        <div class="preset-preview minimal">Minimal</div>
+                        <small>Simple, elegant</small>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="option-group">
+                <label class="option-label">Size</label>
+                <input type="range" id="subtitleSize" min="24" max="48" value="36" class="range-input">
+                <span id="sizeValue">36px</span>
+            </div>
         </section>
 
-        <!-- Sounds Section -->
-        <section class="card hidden" id="soundsCard">
-            <h2 class="section-title">🎵 Trending Sounds</h2>
-            <div id="trendingSounds"></div>
-            
-            <h3 class="section-title mt-6">⭐ Recommended for You</h3>
-            <div id="recommendedSounds"></div>
+        <!-- Generate Button -->
+        <section class="card hidden" id="generateCard">
+            <button class="btn primary large" id="generateBtn">
+                ✨ Generate Viral Short
+            </button>
+            <p class="generate-note">AI will analyze and create the perfect clip automatically</p>
         </section>
 
         <!-- Results Section -->
         <section class="card hidden" id="resultCard">
-            <h2 class="section-title">🎉 Video Ready!</h2>
-            <video class="video-preview" id="finalVideo" controls playsinline></video>
+            <h2 class="section-title">🎉 Your Viral Short is Ready!</h2>
             
-            <div class="download-options">
-                <button class="btn primary" id="downloadBtn">
-                    💾 Save to Phone
-                </button>
-                <button class="btn secondary" id="shareBtn">
-                    📺 Share to YouTube
-                </button>
+            <div class="result-preview">
+                <video class="final-video" id="finalVideo" controls playsinline></video>
+                
+                <div class="ai-insights">
+                    <h4>🧠 AI Analysis</h4>
+                    <div class="insight-item">
+                        <span class="insight-label">Best Moment Found:</span>
+                        <span class="insight-value" id="bestMoment">2:34 - 2:49</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-label">Engagement Score:</span>
+                        <span class="insight-value" id="engagementScore">94/100</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-label">Retention Prediction:</span>
+                        <span class="insight-value" id="retentionPrediction">87%</span>
+                    </div>
+                </div>
             </div>
+            
+            <div class="download-section">
+                <button class="btn primary" id="downloadBtn">
+                    📱 Save to Phone
+                </button>
+                <div class="quick-share">
+                    <button class="share-btn" id="shareToTikTok" data-platform="tiktok">
+                        <span class="platform-icon">🎵</span>
+                        TikTok
+                    </button>
+                    <button class="share-btn" id="shareToYouTube" data-platform="youtube">
+                        <span class="platform-icon">📺</span>
+                        YouTube
+                    </button>
+                    <button class="share-btn" id="shareToInstagram" data-platform="instagram">
+                        <span class="platform-icon">📸</span>
+                        Instagram
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended Sounds -->
+        <section class="card hidden" id="soundsCard">
+            <h2 class="section-title">🎵 Perfect Sounds for Your Video</h2>
+            <div id="recommendedSounds"></div>
         </section>
     </div>
 
     <!-- Processing Overlay -->
     <div class="processing-overlay" id="processingOverlay">
         <div class="processing-content">
-            <div class="spinner"></div>
-            <h3 class="processing-title">Processing...</h3>
-            <p class="processing-status" id="processingStatus">Analyzing your video</p>
+            <div class="ai-brain">🧠</div>
+            <h3 class="processing-title">AI is Working...</h3>
+            <p class="processing-status" id="processingStatus">Analyzing your video for viral potential</p>
+            <div class="processing-steps" id="processingSteps"></div>
+        </div>
+    </div>
+
+    <!-- Download Progress -->
+    <div class="download-overlay hidden" id="downloadOverlay">
+        <div class="download-content">
+            <div class="download-icon">📱</div>
+            <h3>Preparing Download...</h3>
+            <div class="download-progress">
+                <div class="download-fill"></div>
+            </div>
+            <p>Your video will download automatically</p>
         </div>
     </div>
 
