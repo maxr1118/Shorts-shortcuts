@@ -407,20 +407,21 @@ async function handleMainVideoUpload(file) {
     };
 }
 
-// AI Analysis Simulation with Mobile Optimization
+// AI Analysis Simulation with Mobile Optimization - FIXED
 async function runAIAnalysis() {
     elements.aiAnalysis.textContent = 'AI analyzing for viral potential...';
     
-    // Mobile-optimized analysis with progressive feedback
+    // Mobile-optimized analysis with progressive feedback - FIXED TIMING
     const analysisSteps = [
-        { step: 'Detecting faces and emotions', duration: 800 },
-        { step: 'Analyzing audio patterns', duration: 600 },
-        { step: 'Identifying scene changes', duration: 700 },
-        { step: 'Calculating engagement scores', duration: 900 },
-        { step: 'Optimizing for retention', duration: 500 }
+        { step: 'Detecting faces and emotions', duration: 600 },
+        { step: 'Analyzing audio patterns', duration: 500 },
+        { step: 'Identifying scene changes', duration: 550 },
+        { step: 'Calculating engagement scores', duration: 700 },
+        { step: 'Optimizing for retention', duration: 450 } // FIXED: Reduced duration
     ];
     
-    for (const { step, duration } of analysisSteps) {
+    for (let i = 0; i < analysisSteps.length; i++) {
+        const { step, duration } = analysisSteps[i];
         elements.aiAnalysis.innerHTML = `
             <span style="color: #00f2fe">🧠 ${step}...</span>
         `;
@@ -460,6 +461,8 @@ async function runAIAnalysis() {
         overlayImpact: overlayImpact,
         platformOptimization: calculatePlatformOptimization(analysis, detectedContentType)
     };
+    
+    console.log('AI Analysis completed successfully'); // Debug log
 }
 
 // Enhanced Content Type Detection
