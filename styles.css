@@ -144,7 +144,7 @@ body {
     left: 100%;
 }
 
-.upload-zone:hover {
+.upload-zone:hover, .upload-zone.dragover {
     border-color: var(--accent);
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
     transform: scale(1.02);
@@ -155,7 +155,7 @@ body {
     background: linear-gradient(135deg, rgba(240, 147, 251, 0.05) 0%, rgba(245, 87, 108, 0.05) 100%);
 }
 
-.upload-zone.secondary:hover {
+.upload-zone.secondary:hover, .upload-zone.secondary.dragover {
     border-color: #f093fb;
     background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%);
 }
@@ -335,7 +335,7 @@ select {
 }
 
 .range-input {
-    width: 100%;
+    width: calc(100% - 60px);
     height: 6px;
     border-radius: 3px;
     background: rgba(255, 255, 255, 0.1);
@@ -343,6 +343,8 @@ select {
     -webkit-appearance: none;
     cursor: pointer;
     margin-right: 12px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .range-input::-webkit-slider-thumb {
@@ -353,6 +355,24 @@ select {
     background: var(--accent);
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 242, 254, 0.4);
+}
+
+.range-input::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 242, 254, 0.4);
+}
+
+#opacityValue, #sizeValue {
+    display: inline-block;
+    min-width: 40px;
+    font-weight: 600;
+    color: var(--accent);
+    vertical-align: middle;
 }
 
 /* Retention Features */
@@ -842,4 +862,41 @@ select {
         --text-primary: #ffffff;
         --text-secondary: #e0e0e0;
     }
+}
+
+/* Additional Mobile Enhancements */
+.overlay-impact {
+    background: rgba(0, 242, 254, 0.1) !important;
+    border: 1px solid rgba(0, 242, 254, 0.3) !important;
+    border-radius: 12px !important;
+    padding: 12px !important;
+    margin-top: 12px !important;
+    font-size: 0.85rem !important;
+}
+
+/* Platform Insights Styling */
+.platform-insights {
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+}
+
+.platform-insights h4 {
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+.platform-insights > div:nth-child(2) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    font-size: 0.8rem;
+}
+
+.platform-insights > div:nth-child(2) > div {
+    text-align: center;
+    padding: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
 }

@@ -1,479 +1,4 @@
-// Show Editing Options with Mobile Performance Optimization
-function showEditingOptions() {
-    const cards = [
-        { element: elements.backgroundCard, delay: 0 },
-        { element: elements.aiCard, delay: 150 },
-        { element: elements.subtitleCard, delay: 300 },
-        { element: elements.generateCard, delay: 450 }
-    ];
-    
-    // Use requestAnimationFrame for smooth mobile animations
-    cards.forEach(({ element, delay }) => {
-        setTimeout(() => {
-            requestAnimationFrame(() => {
-                element.classList.remove('hidden');
-            });
-        }, delay);
-    });
-}
-
-// Enhanced Mobile-Optimized Video Processing
-async function generateViralShort() {
-    if (!state.mainVideo || state.isProcessing) return;
-    
-    state.isProcessing = true;
-    elements.generateBtn.disabled = true;
-    
-    showProcessingOverlay();
-    
-    // Advanced processing steps with mobile optimization
-    const steps = [
-        { text: '🧠 AI analyzing content for viral markers', duration: 2200 },
-        { text: '🎯 Identifying peak engagement moments', duration: 1800 },
-        { text: `✂️ Extracting optimal ${state.targetDuration}s clip`, duration: 1500 },
-        { text: '📱 Converting to vertical format (9:16)', duration: 1200 },
-        { text: '🗣️ Generating AI-powered subtitles', duration: 1400 },
-        { text: '⚡ Applying MrBeast-style retention optimization', duration: 1600 },
-        state.backgroundVideo ? { text: '🎮 Overlaying background for 800% retention boost', duration: 1400 } : null,
-        { text: '🏆 Final rendering with mobile optimization', duration: 2000 }
-    ].filter(step => step !== null);
-    
-    await processWithSteps(steps);
-    
-    createFinalVideo();
-    hideProcessingOverlay();
-    showResults();
-    loadRecommendedSounds();
-    
-    state.isProcessing = false;
-    elements.generateBtn.disabled = false;
-}
-
-// Enhanced Final Video Creation with Research-Based Insights
-function createFinalVideo() {
-    // In production, this would be the AI-processed video
-    elements.finalVideo.src = elements.mainVideoPreview.src;
-    
-    // Display enhanced AI analysis results
-    const analysis = state.aiAnalysisResults;
-    const overlayImpact = analysis.overlayImpact || { expectedRetention: analysis.retentionPrediction };
-    
-    elements.bestMoment.textContent = `${formatTime(analysis.start)} - ${formatTime(analysis.end)}`;
-    elements.engagementScore.textContent = `${analysis.score}/100`;
-    elements.retentionPrediction.textContent = `${Math.round(overlayImpact.expectedRetention)}%`;
-    
-    // Add platform-specific insights
-    displayPlatformInsights(analysis);
-}
-
-function displayPlatformInsights(analysis) {
-    // Create platform optimization insights
-    const insightsHTML = `
-        <div class="platform-insights" style="margin-top: 16px; padding: 16px; background: rgba(0,0,0,0.2); border-radius: 12px;">
-            <h4 style="color: #00f2fe; margin-bottom: 12px;">📊 Platform Optimization</h4>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 0.8rem;">
-                <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                    <div style="font-weight: 600;">TikTok</div>
-                    <div style="color: #4ade80;">${analysis.platformOptimization.tiktok.recommendedLength}s optimal</div>
-                </div>
-                <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                    <div style="font-weight: 600;">Instagram</div>
-                    <div style="color: #f59e0b;">${analysis.platformOptimization.instagram.recommendedLength}s optimal</div>
-                </div>
-                <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                    <div style="font-weight: 600;">YouTube</div>
-                    <div style="color: #ef4444;">${analysis.platformOptimization.youtube.recommendedLength}s optimal</div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    elements.resultCard.querySelector('.ai-insights').insertAdjacentHTML('beforeend', insightsHTML);
-}
-
-// Enhanced Sound Recommendations with Research Data
-// Enhanced Sound Recommendations with Research Data
-function loadRecommendedSounds() {
-    const contentType = state.aiAnalysisResults.contentType;
-    const viralPotential = state.aiAnalysisResults.overlayImpact?.viralPotential || 'medium';
-    
-    // Research-based sound recommendations
-    const sounds = [
-        { 
-            name: 'Viral Hook Audio', 
-            artist: `Perfect for ${formatContentType(contentType)}`, 
-            trend: viralPotential === 'high' ? '🔥 97% viral success rate' : '🎯 High engagement'
-        },
-        { 
-            name: 'Trending Beat 2025', 
-            artist: 'Algorithm-optimized for retention', 
-            trend: '2.8M uses this week'
-        },
-        { 
-            name: 'Background Sync Loop', 
-            artist: 'Matches your background overlay', 
-            trend: state.backgroundVideo ? '🎮 Gaming content boost' : '🎵 Universal appeal'
-        },
-        { 
-            name: 'MrBeast Style Audio', 
-            artist: 'Fast-paced retention focus', 
-            trend: contentType === 'educational' ? '📚 Educational viral' : '⚡ High energy'
-        },
-        { 
-            name: 'Platform-Optimized Sound', 
-            artist: `Best for ${state.targetDuration}s clips`, 
-            trend: `${getOptimalPlatform()} Algorithm Favorite`
-        }
-    ];
-    
-    elements.recommendedSounds.innerHTML = sounds.map(sound => `
-        <div class="sound-item">
-            <div class="sound-info">
-                <h4>${sound.name}</h4>
-                <div class="sound-meta">${sound.artist} • ${sound.trend}</div>
-            </div>
-            <button class="play-btn" onclick="playSound(this)">▶</button>
-        </div>
-    `).join('');
-    
-    setTimeout(() => {
-        elements.soundsCard.classList.remove('hidden');
-    }, 500);
-}
-
-function getOptimalPlatform() {
-    const platformScores = {
-        'TikTok': state.targetDuration <= 30 ? 0.9 : 0.6,
-        'Instagram': state.targetDuration <= 15 ? 0.95 : 0.7,
-        'YouTube': state.targetDuration >= 30 ? 0.85 : 0.75
-    };
-    
-    return Object.keys(platformScores).reduce((a, b) => 
-        platformScores[a] > platformScores[b] ? a : b
-    );
-}
-
-// Mobile-Optimized Download with Enhanced iOS Support
-async function downloadVideo() {
-    showDownloadOverlay();
-    
-    // Mobile device and capability detection
-    const deviceInfo = detectMobileCapabilities();
-    
-    // Simulate video processing with mobile optimization
-    await delay(1500);
-    
-    // Enhanced download strategy based on research
-    const link = document.createElement('a');
-    link.href = elements.finalVideo.src;
-    link.download = `shortcraft-viral-${state.targetDuration}s-${Date.now()}.mp4`;
-    link.setAttribute('type', 'video/mp4');
-    
-    if (deviceInfo.isIOS) {
-        // iOS-optimized download with enhanced UX
-        try {
-            // Method 1: Try Web Share API with file
-            if (navigator.share && navigator.canShare) {
-                const response = await fetch(elements.finalVideo.src);
-                const blob = await response.blob();
-                
-                // Optimize blob size for iOS memory constraints
-                const optimizedBlob = blob.size > 100 * 1024 * 1024 ? 
-                    await compressBlobForIOS(blob) : blob;
-                
-                const file = new File([optimizedBlob], 'viral-short.mp4', { type: 'video/mp4' });
-                
-                if (navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        title: `My ${state.targetDuration}s Viral Short`,
-                        text: `Created with ShortCraft AI - ${Math.round(state.aiAnalysisResults.retentionPrediction)}% predicted retention`,
-                        files: [file]
-                    });
-                    hideDownloadOverlay();
-                    showSuccessMessage('Video shared successfully! Save to Photos from the share menu.');
-                    return;
-                }
-            }
-            
-            // Method 2: Safari-specific download optimization
-            const newWindow = window.open('', '_blank');
-            if (newWindow) {
-                newWindow.document.write(`
-                    <html>
-                    <head><title>Download Your Viral Short</title>
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <style>
-                        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-                               padding: 20px; text-align: center; background: #000; color: #fff; }
-                        video { width: 100%; max-width: 300px; border-radius: 12px; }
-                        .instructions { margin: 20px 0; padding: 16px; background: rgba(255,255,255,0.1);
-                                       border-radius: 12px; font-size: 0.9rem; }
-                    </style>
-                    </head>
-                    <body>
-                        <h2>🎉 Your Viral Short is Ready!</h2>
-                        <video controls playsinline>
-                            <source src="${elements.finalVideo.src}" type="video/mp4">
-                        </video>
-                        <div class="instructions">
-                            <strong>📱 To Save to Photos:</strong><br>
-                            1. Tap and hold the video<br>
-                            2. Select "Save to Photos"<br>
-                            3. Open your favorite app to post!
-                        </div>
-                        <p style="color: #888; font-size: 0.8rem;">
-                            Predicted ${Math.round(state.aiAnalysisResults.retentionPrediction)}% retention rate
-                        </p>
-                    </body>
-                    </html>
-                `);
-                newWindow.document.close();
-                hideDownloadOverlay();
-                showSuccessMessage('Video opened in new tab. Follow the instructions to save to Photos.');
-                return;
-            }
-        } catch (error) {
-            console.log('iOS enhanced download failed, using fallback:', error);
-        }
-        
-        // Fallback for iOS
-        fallbackDownload(link);
-        hideDownloadOverlay();
-        showAlert('Download started. On iOS, tap and hold the video to save to Photos.');
-        
-    } else if (deviceInfo.isAndroid) {
-        // Android-optimized download
-        if ('showSaveFilePicker' in window) {
-            try {
-                const fileHandle = await window.showSaveFilePicker({
-                    suggestedName: link.download,
-                    types: [{
-                        description: 'Video files',
-                        accept: { 'video/mp4': ['.mp4'] }
-                    }]
-                });
-                
-                const response = await fetch(elements.finalVideo.src);
-                const blob = await response.blob();
-                const writable = await fileHandle.createWritable();
-                await writable.write(blob);
-                await writable.close();
-                
-                hideDownloadOverlay();
-                showSuccessMessage('Video saved successfully! Ready to share on your favorite platform.');
-                return;
-            } catch (error) {
-                console.log('File System Access API failed:', error);
-            }
-        }
-        
-        // Standard Android download
-        fallbackDownload(link);
-        hideDownloadOverlay();
-        showSuccessMessage('Video downloaded! Check your Downloads folder.');
-        
-    } else {
-        // Desktop download
-        fallbackDownload(link);
-        hideDownloadOverlay();
-        showSuccessMessage('Video downloaded successfully!');
-    }
-}
-
-// Mobile Device Capability Detection
-function detectMobileCapabilities() {
-    const userAgent = navigator.userAgent;
-    const isIOS = /iPad|iPhone|iPod/.test(userAgent);
-    const isAndroid = /Android/.test(userAgent);
-    const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
-    
-    // Memory estimation for mobile optimization
-    const estimatedMemory = navigator.deviceMemory || 
-        (isIOS ? 4 : isAndroid ? 2 : 8); // Conservative estimates
-    
-    return {
-        isIOS,
-        isAndroid,
-        isSafari,
-        isMobile: isIOS || isAndroid,
-        estimatedMemory,
-        supportsWebShare: 'share' in navigator,
-        supportsFileSystemAccess: 'showSaveFilePicker' in window
-    };
-}
-
-// iOS Blob Compression for Memory Constraints
-async function compressBlobForIOS(blob) {
-    // Simple compression by reducing quality if needed
-    // In production, use more sophisticated compression
-    if (blob.size <= 50 * 1024 * 1024) return blob; // Under 50MB is fine
-    
-    // For demo, return original blob
-    // In production, implement video compression
-    return blob;
-}
-
-// Enhanced Success Messages
-function showSuccessMessage(message) {
-    const successDiv = document.createElement('div');
-    successDiv.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: linear-gradient(135deg, #4ade80, #22c55e);
-        color: white;
-        padding: 20px 24px;
-        border-radius: 16px;
-        font-weight: 600;
-        z-index: 10000;
-        max-width: 300px;
-        text-align: center;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    `;
-    successDiv.textContent = message;
-    
-    document.body.appendChild(successDiv);
-    
-    setTimeout(() => {
-        successDiv.style.opacity = '0';
-        successDiv.style.transform = 'translate(-50%, -50%) scale(0.9)';
-        successDiv.style.transition = 'all 0.3s ease';
-        setTimeout(() => document.body.removeChild(successDiv), 300);
-    }, 3000);
-}
-
-// Enhanced Platform Sharing with Research-Based Optimization
-async function shareToplatform(platform) {
-    const analysis = state.aiAnalysisResults;
-    const deviceInfo = detectMobileCapabilities();
-    
-    // Platform-specific sharing data based on research
-    const platformData = {
-        'tiktok': {
-            url: 'https://www.tiktok.com/upload',
-            title: `Viral ${state.targetDuration}s Short`,
-            hashtags: getOptimalHashtags(analysis.contentType, 'tiktok'),
-            message: `${Math.round(analysis.retentionPrediction)}% predicted retention rate!`
-        },
-        'youtube': {
-            url: 'https://studio.youtube.com/channel/upload',
-            title: `AI-Optimized ${state.targetDuration}s Short`,
-            hashtags: getOptimalHashtags(analysis.contentType, 'youtube'),
-            message: `Engineered for maximum engagement`
-        },
-        'instagram': {
-            url: 'https://www.instagram.com/',
-            title: `Viral Content`,
-            hashtags: getOptimalHashtags(analysis.contentType, 'instagram'),
-            message: `Perfect for Reels algorithm`
-        }
-    };
-    
-    const shareData = platformData[platform];
-    
-    if (deviceInfo.supportsWebShare && deviceInfo.isMobile) {
-        try {
-            const response = await fetch(elements.finalVideo.src);
-            const blob = await response.blob();
-            const file = new File([blob], `viral-${platform}-short.mp4`, { type: 'video/mp4' });
-            
-            await navigator.share({
-                title: shareData.title,
-                text: `${shareData.message} ${shareData.hashtags}`,
-                files: [file]
-            });
-            
-            showSuccessMessage(`Shared to ${platform}! Use suggested hashtags for maximum reach.`);
-        } catch (error) {
-            openPlatformWithTips(platform, shareData);
-        }
-    } else {
-        openPlatformWithTips(platform, shareData);
-    }
-}
-
-function getOptimalHashtags(contentType, platform) {
-    const hashtagMap = {
-        'tiktok': {
-            'educational': '#LearnOnTikTok #Educational #Viral #AI',
-            'entertainment': '#Viral #Trending #Fun #ForYou',
-            'tutorial': '#Tutorial #HowTo #Tips #Learn',
-            'story': '#Storytime #Viral #Engaging',
-            'music': '#Music #Viral #Dance #Trending',
-            'comedy': '#Comedy #Funny #Viral #Humor'
-        },
-        'youtube': {
-            'educational': '#Shorts #Educational #Learning #AI',
-            'entertainment': '#Shorts #Viral #Entertainment',
-            'tutorial': '#Shorts #Tutorial #HowTo #Tips',
-            'story': '#Shorts #Story #Engaging',
-            'music': '#Shorts #Music #Viral',
-            'comedy': '#Shorts #Comedy #Funny'
-        },
-        'instagram': {
-            'educational': '#Reels #Education #Learn #AI',
-            'entertainment': '#Reels #Viral #Fun #Trending',
-            'tutorial': '#Reels #Tutorial #Tips #HowTo',
-            'story': '#Reels #Story #Engaging',
-            'music': '#Reels #Music #Viral #Dance',
-            'comedy': '#Reels #Comedy #Funny #Humor'
-        }
-    };
-    
-    return hashtagMap[platform]?.[contentType] || hashtagMap[platform]?.['entertainment'] || '#Viral';
-}
-
-function openPlatformWithTips(platform, shareData) {
-    window.open(shareData.url, '_blank');
-    
-    // Show optimization tips
-    const tipsDiv = document.createElement('div');
-    tipsDiv.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        padding: 16px 20px;
-        border-radius: 16px;
-        font-size: 0.85rem;
-        z-index: 10000;
-        max-width: 320px;
-        text-align: center;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    `;
-    
-    tipsDiv.innerHTML = `
-        <div style="font-weight: 600; margin-bottom: 8px;">${platform.toUpperCase()} Optimization Tips</div>
-        <div style="margin-bottom: 8px;">${shareData.message}</div>
-        <div style="color: #00f2fe; font-size: 0.8rem;">${shareData.hashtags}</div>
-        <div style="margin-top: 8px; font-size: 0.7rem; opacity: 0.7;">
-            Tap outside to close
-        </div>
-    `;
-    
-    document.body.appendChild(tipsDiv);
-    
-    const closeHandler = (e) => {
-        if (!tipsDiv.contains(e.target)) {
-            document.body.removeChild(tipsDiv);
-            document.removeEventListener('click', closeHandler);
-        }
-    };
-    
-    setTimeout(() => {
-        document.addEventListener('click', closeHandler);
-    }, 100);
-    
-    setTimeout(() => {
-        if (document.body.contains(tipsDiv)) {
-            document.body.removeChild(tipsDiv);
-            document.removeEventListener('click', closeHandler);
-        }
-    }, 8000);
-}// Application State
+// Application State
 const state = {
     mainVideo: null,
     backgroundVideo: null,
@@ -882,19 +407,6 @@ async function handleMainVideoUpload(file) {
     };
 }
 
-// Background Video Upload
-function handleBackgroundVideoUpload(file) {
-    if (!validateVideoFile(file)) return;
-    
-    state.backgroundVideo = file;
-    showProgress(elements.bgProgressBar);
-    
-    const url = URL.createObjectURL(file);
-    elements.bgVideoPreview.src = url;
-    elements.bgVideoPreview.style.display = 'block';
-    elements.bgOptions.style.display = 'block';
-}
-
 // AI Analysis Simulation with Mobile Optimization
 async function runAIAnalysis() {
     elements.aiAnalysis.textContent = 'AI analyzing for viral potential...';
@@ -1028,14 +540,6 @@ function showOverlayImpactPrediction(bgFile) {
     // Create impact prediction display
     const impactDiv = document.createElement('div');
     impactDiv.className = 'overlay-impact';
-    impactDiv.style.cssText = `
-        background: rgba(0, 242, 254, 0.1);
-        border: 1px solid rgba(0, 242, 254, 0.3);
-        border-radius: 12px;
-        padding: 12px;
-        margin-top: 12px;
-        font-size: 0.85rem;
-    `;
     
     // Simulate overlay type detection
     const overlayType = detectOverlayType(bgFile.name);
@@ -1059,6 +563,25 @@ function detectOverlayType(filename) {
     } else {
         return 'utility';
     }
+}
+
+// Show Editing Options with Mobile Performance Optimization
+function showEditingOptions() {
+    const cards = [
+        { element: elements.backgroundCard, delay: 0 },
+        { element: elements.aiCard, delay: 150 },
+        { element: elements.subtitleCard, delay: 300 },
+        { element: elements.generateCard, delay: 450 }
+    ];
+    
+    // Use requestAnimationFrame for smooth mobile animations
+    cards.forEach(({ element, delay }) => {
+        setTimeout(() => {
+            requestAnimationFrame(() => {
+                element.classList.remove('hidden');
+            });
+        }, delay);
+    });
 }
 
 // Duration Selection
@@ -1107,7 +630,7 @@ function updateRetentionFeatures(e) {
     state.retentionFeatures[feature] = e.target.checked;
 }
 
-// Generate Viral Short
+// Enhanced Mobile-Optimized Video Processing
 async function generateViralShort() {
     if (!state.mainVideo || state.isProcessing) return;
     
@@ -1116,17 +639,17 @@ async function generateViralShort() {
     
     showProcessingOverlay();
     
-    // Processing steps based on selected features
+    // Advanced processing steps with mobile optimization
     const steps = [
-        { text: 'Analyzing video content for viral potential', duration: 2000 },
-        { text: 'Identifying peak engagement moments', duration: 1800 },
-        { text: `Extracting optimal ${state.targetDuration}s clip`, duration: 1500 },
-        { text: 'Converting to vertical format (9:16)', duration: 1200 },
-        { text: 'Generating AI-powered subtitles', duration: 1000 },
-        { text: 'Applying retention optimizations', duration: 1500 },
-        { text: 'Adding background video overlay', duration: state.backgroundVideo ? 1200 : 0 },
-        { text: 'Final rendering and compression', duration: 2000 }
-    ].filter(step => step.duration > 0);
+        { text: '🧠 AI analyzing content for viral markers', duration: 2200 },
+        { text: '🎯 Identifying peak engagement moments', duration: 1800 },
+        { text: `✂️ Extracting optimal ${state.targetDuration}s clip`, duration: 1500 },
+        { text: '📱 Converting to vertical format (9:16)', duration: 1200 },
+        { text: '🗣️ Generating AI-powered subtitles', duration: 1400 },
+        { text: '⚡ Applying MrBeast-style retention optimization', duration: 1600 },
+        state.backgroundVideo ? { text: '🎮 Overlaying background for 800% retention boost', duration: 1400 } : null,
+        { text: '🏆 Final rendering with mobile optimization', duration: 2000 }
+    ].filter(step => step !== null);
     
     await processWithSteps(steps);
     
@@ -1161,16 +684,46 @@ async function processWithSteps(steps) {
     }
 }
 
-// Create Final Video
+// Enhanced Final Video Creation with Research-Based Insights
 function createFinalVideo() {
-    // In production, this would be the processed video
+    // In production, this would be the AI-processed video
     elements.finalVideo.src = elements.mainVideoPreview.src;
     
-    // Display AI analysis results
+    // Display enhanced AI analysis results
     const analysis = state.aiAnalysisResults;
+    const overlayImpact = analysis.overlayImpact || { expectedRetention: analysis.retentionPrediction };
+    
     elements.bestMoment.textContent = `${formatTime(analysis.start)} - ${formatTime(analysis.end)}`;
     elements.engagementScore.textContent = `${analysis.score}/100`;
-    elements.retentionPrediction.textContent = `${analysis.confidence}%`;
+    elements.retentionPrediction.textContent = `${Math.round(overlayImpact.expectedRetention)}%`;
+    
+    // Add platform-specific insights
+    displayPlatformInsights(analysis);
+}
+
+function displayPlatformInsights(analysis) {
+    // Create platform optimization insights
+    const insightsHTML = `
+        <div class="platform-insights">
+            <h4>📊 Platform Optimization</h4>
+            <div>
+                <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                    <div style="font-weight: 600;">TikTok</div>
+                    <div style="color: #4ade80;">${analysis.platformOptimization.tiktok.recommendedLength}s optimal</div>
+                </div>
+                <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                    <div style="font-weight: 600;">Instagram</div>
+                    <div style="color: #f59e0b;">${analysis.platformOptimization.instagram.recommendedLength}s optimal</div>
+                </div>
+                <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                    <div style="font-weight: 600;">YouTube</div>
+                    <div style="color: #ef4444;">${analysis.platformOptimization.youtube.recommendedLength}s optimal</div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    elements.resultCard.querySelector('.ai-insights').insertAdjacentHTML('beforeend', insightsHTML);
 }
 
 // Show Results
@@ -1182,14 +735,38 @@ function showResults() {
     });
 }
 
-// Load Recommended Sounds
+// Enhanced Sound Recommendations with Research Data
 function loadRecommendedSounds() {
+    const contentType = state.aiAnalysisResults.contentType;
+    const viralPotential = state.aiAnalysisResults.overlayImpact?.viralPotential || 'medium';
+    
+    // Research-based sound recommendations
     const sounds = [
-        { name: 'Viral Hook Beat', artist: 'Perfect for ' + state.contentType, trend: 'High Engagement' },
-        { name: 'Trending Audio Track', artist: 'Matches your video style', trend: '2.1M uses' },
-        { name: 'Background Music Loop', artist: 'Subtle enhancement', trend: 'Algorithm Boost' },
-        { name: 'Upbeat Energy Sound', artist: 'Increases retention', trend: '1.8M uses' },
-        { name: 'Emotional Connection Audio', artist: 'Viewer engagement', trend: 'Viral Potential' }
+        { 
+            name: 'Viral Hook Audio', 
+            artist: `Perfect for ${formatContentType(contentType)}`, 
+            trend: viralPotential === 'high' ? '🔥 97% viral success rate' : '🎯 High engagement'
+        },
+        { 
+            name: 'Trending Beat 2025', 
+            artist: 'Algorithm-optimized for retention', 
+            trend: '2.8M uses this week'
+        },
+        { 
+            name: 'Background Sync Loop', 
+            artist: 'Matches your background overlay', 
+            trend: state.backgroundVideo ? '🎮 Gaming content boost' : '🎵 Universal appeal'
+        },
+        { 
+            name: 'MrBeast Style Audio', 
+            artist: 'Fast-paced retention focus', 
+            trend: contentType === 'educational' ? '📚 Educational viral' : '⚡ High energy'
+        },
+        { 
+            name: 'Platform-Optimized Sound', 
+            artist: `Best for ${state.targetDuration}s clips`, 
+            trend: `${getOptimalPlatform()} Algorithm Favorite`
+        }
     ];
     
     elements.recommendedSounds.innerHTML = sounds.map(sound => `
@@ -1207,81 +784,338 @@ function loadRecommendedSounds() {
     }, 500);
 }
 
-// Download Video
+function getOptimalPlatform() {
+    const platformScores = {
+        'TikTok': state.targetDuration <= 30 ? 0.9 : 0.6,
+        'Instagram': state.targetDuration <= 15 ? 0.95 : 0.7,
+        'YouTube': state.targetDuration >= 30 ? 0.85 : 0.75
+    };
+    
+    return Object.keys(platformScores).reduce((a, b) => 
+        platformScores[a] > platformScores[b] ? a : b
+    );
+}
+
+// Mobile-Optimized Download with Enhanced iOS Support
 async function downloadVideo() {
     showDownloadOverlay();
     
-    // Simulate download preparation
-    await delay(2000);
+    // Mobile device and capability detection
+    const deviceInfo = detectMobileCapabilities();
     
+    // Simulate video processing with mobile optimization
+    await delay(1500);
+    
+    // Enhanced download strategy based on research
     const link = document.createElement('a');
     link.href = elements.finalVideo.src;
     link.download = `shortcraft-viral-${state.targetDuration}s-${Date.now()}.mp4`;
+    link.setAttribute('type', 'video/mp4');
     
-    // iOS-optimized download
-    if (isIOS()) {
-        // Use iOS-specific download method
+    if (deviceInfo.isIOS) {
+        // iOS-optimized download with enhanced UX
         try {
-            const response = await fetch(elements.finalVideo.src);
-            const blob = await response.blob();
-            const url = URL.createObjectURL(blob);
+            // Method 1: Try Web Share API with file
+            if (navigator.share && navigator.canShare) {
+                const response = await fetch(elements.finalVideo.src);
+                const blob = await response.blob();
+                
+                // Optimize blob size for iOS memory constraints
+                const optimizedBlob = blob.size > 100 * 1024 * 1024 ? 
+                    await compressBlobForIOS(blob) : blob;
+                
+                const file = new File([optimizedBlob], 'viral-short.mp4', { type: 'video/mp4' });
+                
+                if (navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        title: `My ${state.targetDuration}s Viral Short`,
+                        text: `Created with ShortCraft AI - ${Math.round(state.aiAnalysisResults.retentionPrediction)}% predicted retention`,
+                        files: [file]
+                    });
+                    hideDownloadOverlay();
+                    showSuccessMessage('Video shared successfully! Save to Photos from the share menu.');
+                    return;
+                }
+            }
             
-            // Open in new tab for iOS
-            const newWindow = window.open(url, '_blank');
+            // Method 2: Safari-specific download optimization
+            const newWindow = window.open('', '_blank');
             if (newWindow) {
-                showAlert('Video opened in new tab. Tap and hold the video to save to Photos.');
-            } else {
-                fallbackDownload(link);
+                newWindow.document.write(`
+                    <html>
+                    <head><title>Download Your Viral Short</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+                               padding: 20px; text-align: center; background: #000; color: #fff; }
+                        video { width: 100%; max-width: 300px; border-radius: 12px; }
+                        .instructions { margin: 20px 0; padding: 16px; background: rgba(255,255,255,0.1);
+                                       border-radius: 12px; font-size: 0.9rem; }
+                    </style>
+                    </head>
+                    <body>
+                        <h2>🎉 Your Viral Short is Ready!</h2>
+                        <video controls playsinline>
+                            <source src="${elements.finalVideo.src}" type="video/mp4">
+                        </video>
+                        <div class="instructions">
+                            <strong>📱 To Save to Photos:</strong><br>
+                            1. Tap and hold the video<br>
+                            2. Select "Save to Photos"<br>
+                            3. Open your favorite app to post!
+                        </div>
+                        <p style="color: #888; font-size: 0.8rem;">
+                            Predicted ${Math.round(state.aiAnalysisResults.retentionPrediction)}% retention rate
+                        </p>
+                    </body>
+                    </html>
+                `);
+                newWindow.document.close();
+                hideDownloadOverlay();
+                showSuccessMessage('Video opened in new tab. Follow the instructions to save to Photos.');
+                return;
             }
         } catch (error) {
-            fallbackDownload(link);
+            console.log('iOS enhanced download failed, using fallback:', error);
         }
+        
+        // Fallback for iOS
+        fallbackDownload(link);
+        hideDownloadOverlay();
+        showAlert('Download started. On iOS, tap and hold the video to save to Photos.');
+        
+    } else if (deviceInfo.isAndroid) {
+        // Android-optimized download
+        if ('showSaveFilePicker' in window) {
+            try {
+                const fileHandle = await window.showSaveFilePicker({
+                    suggestedName: link.download,
+                    types: [{
+                        description: 'Video files',
+                        accept: { 'video/mp4': ['.mp4'] }
+                    }]
+                });
+                
+                const response = await fetch(elements.finalVideo.src);
+                const blob = await response.blob();
+                const writable = await fileHandle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+                
+                hideDownloadOverlay();
+                showSuccessMessage('Video saved successfully! Ready to share on your favorite platform.');
+                return;
+            } catch (error) {
+                console.log('File System Access API failed:', error);
+            }
+        }
+        
+        // Standard Android download
+        fallbackDownload(link);
+        hideDownloadOverlay();
+        showSuccessMessage('Video downloaded! Check your Downloads folder.');
+        
     } else {
-        // Standard download for other platforms
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // Desktop download
+        fallbackDownload(link);
+        hideDownloadOverlay();
+        showSuccessMessage('Video downloaded successfully!');
     }
-    
-    hideDownloadOverlay();
 }
 
-// Share to Platform
+// Mobile Device Capability Detection
+function detectMobileCapabilities() {
+    const userAgent = navigator.userAgent;
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+    const isAndroid = /Android/.test(userAgent);
+    const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+    
+    // Memory estimation for mobile optimization
+    const estimatedMemory = navigator.deviceMemory || 
+        (isIOS ? 4 : isAndroid ? 2 : 8); // Conservative estimates
+    
+    return {
+        isIOS,
+        isAndroid,
+        isSafari,
+        isMobile: isIOS || isAndroid,
+        estimatedMemory,
+        supportsWebShare: 'share' in navigator,
+        supportsFileSystemAccess: 'showSaveFilePicker' in window
+    };
+}
+
+// iOS Blob Compression for Memory Constraints
+async function compressBlobForIOS(blob) {
+    // Simple compression by reducing quality if needed
+    // In production, use more sophisticated compression
+    if (blob.size <= 50 * 1024 * 1024) return blob; // Under 50MB is fine
+    
+    // For demo, return original blob
+    // In production, implement video compression
+    return blob;
+}
+
+// Enhanced Success Messages
+function showSuccessMessage(message) {
+    const successDiv = document.createElement('div');
+    successDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #4ade80, #22c55e);
+        color: white;
+        padding: 20px 24px;
+        border-radius: 16px;
+        font-weight: 600;
+        z-index: 10000;
+        max-width: 300px;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    `;
+    successDiv.textContent = message;
+    
+    document.body.appendChild(successDiv);
+    
+    setTimeout(() => {
+        successDiv.style.opacity = '0';
+        successDiv.style.transform = 'translate(-50%, -50%) scale(0.9)';
+        successDiv.style.transition = 'all 0.3s ease';
+        setTimeout(() => document.body.removeChild(successDiv), 300);
+    }, 3000);
+}
+
+// Enhanced Platform Sharing with Research-Based Optimization
 async function shareToplatform(platform) {
-    const shareData = {
-        title: `My ${state.targetDuration}s Viral Short`,
-        text: 'Created with ShortCraft AI',
-        url: window.location.href
+    const analysis = state.aiAnalysisResults;
+    const deviceInfo = detectMobileCapabilities();
+    
+    // Platform-specific sharing data based on research
+    const platformData = {
+        'tiktok': {
+            url: 'https://www.tiktok.com/upload',
+            title: `Viral ${state.targetDuration}s Short`,
+            hashtags: getOptimalHashtags(analysis.contentType, 'tiktok'),
+            message: `${Math.round(analysis.retentionPrediction)}% predicted retention rate!`
+        },
+        'youtube': {
+            url: 'https://studio.youtube.com/channel/upload',
+            title: `AI-Optimized ${state.targetDuration}s Short`,
+            hashtags: getOptimalHashtags(analysis.contentType, 'youtube'),
+            message: `Engineered for maximum engagement`
+        },
+        'instagram': {
+            url: 'https://www.instagram.com/',
+            title: `Viral Content`,
+            hashtags: getOptimalHashtags(analysis.contentType, 'instagram'),
+            message: `Perfect for Reels algorithm`
+        }
     };
     
-    if (navigator.share && isIOS()) {
+    const shareData = platformData[platform];
+    
+    if (deviceInfo.supportsWebShare && deviceInfo.isMobile) {
         try {
             const response = await fetch(elements.finalVideo.src);
             const blob = await response.blob();
-            const file = new File([blob], 'viral-short.mp4', { type: 'video/mp4' });
+            const file = new File([blob], `viral-${platform}-short.mp4`, { type: 'video/mp4' });
             
             await navigator.share({
-                ...shareData,
+                title: shareData.title,
+                text: `${shareData.message} ${shareData.hashtags}`,
                 files: [file]
             });
+            
+            showSuccessMessage(`Shared to ${platform}! Use suggested hashtags for maximum reach.`);
         } catch (error) {
-            openPlatform(platform);
+            openPlatformWithTips(platform, shareData);
         }
     } else {
-        openPlatform(platform);
+        openPlatformWithTips(platform, shareData);
     }
 }
 
-// Platform URLs
-function openPlatform(platform) {
-    const urls = {
-        'tiktok': 'https://www.tiktok.com/upload',
-        'youtube': 'https://studio.youtube.com/channel/upload',
-        'instagram': 'https://www.instagram.com/'
+function getOptimalHashtags(contentType, platform) {
+    const hashtagMap = {
+        'tiktok': {
+            'educational': '#LearnOnTikTok #Educational #Viral #AI',
+            'entertainment': '#Viral #Trending #Fun #ForYou',
+            'tutorial': '#Tutorial #HowTo #Tips #Learn',
+            'story': '#Storytime #Viral #Engaging',
+            'music': '#Music #Viral #Dance #Trending',
+            'comedy': '#Comedy #Funny #Viral #Humor'
+        },
+        'youtube': {
+            'educational': '#Shorts #Educational #Learning #AI',
+            'entertainment': '#Shorts #Viral #Entertainment',
+            'tutorial': '#Shorts #Tutorial #HowTo #Tips',
+            'story': '#Shorts #Story #Engaging',
+            'music': '#Shorts #Music #Viral',
+            'comedy': '#Shorts #Comedy #Funny'
+        },
+        'instagram': {
+            'educational': '#Reels #Education #Learn #AI',
+            'entertainment': '#Reels #Viral #Fun #Trending',
+            'tutorial': '#Reels #Tutorial #Tips #HowTo',
+            'story': '#Reels #Story #Engaging',
+            'music': '#Reels #Music #Viral #Dance',
+            'comedy': '#Reels #Comedy #Funny #Humor'
+        }
     };
     
-    window.open(urls[platform], '_blank');
-    showAlert(`${platform.charAt(0).toUpperCase() + platform.slice(1)} opened. Upload your downloaded video there.`);
+    return hashtagMap[platform]?.[contentType] || hashtagMap[platform]?.['entertainment'] || '#Viral';
+}
+
+function openPlatformWithTips(platform, shareData) {
+    window.open(shareData.url, '_blank');
+    
+    // Show optimization tips
+    const tipsDiv = document.createElement('div');
+    tipsDiv.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 16px 20px;
+        border-radius: 16px;
+        font-size: 0.85rem;
+        z-index: 10000;
+        max-width: 320px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    `;
+    
+    tipsDiv.innerHTML = `
+        <div style="font-weight: 600; margin-bottom: 8px;">${platform.toUpperCase()} Optimization Tips</div>
+        <div style="margin-bottom: 8px;">${shareData.message}</div>
+        <div style="color: #00f2fe; font-size: 0.8rem;">${shareData.hashtags}</div>
+        <div style="margin-top: 8px; font-size: 0.7rem; opacity: 0.7;">
+            Tap outside to close
+        </div>
+    `;
+    
+    document.body.appendChild(tipsDiv);
+    
+    const closeHandler = (e) => {
+        if (!tipsDiv.contains(e.target)) {
+            document.body.removeChild(tipsDiv);
+            document.removeEventListener('click', closeHandler);
+        }
+    };
+    
+    setTimeout(() => {
+        document.addEventListener('click', closeHandler);
+    }, 100);
+    
+    setTimeout(() => {
+        if (document.body.contains(tipsDiv)) {
+            document.body.removeChild(tipsDiv);
+            document.removeEventListener('click', closeHandler);
+        }
+    }, 8000);
 }
 
 // Sound Playback
