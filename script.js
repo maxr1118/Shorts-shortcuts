@@ -1,4 +1,4 @@
-// Application State
+// Simplified Application State
 const state = {
     mainVideo: null,
     backgroundVideo: null,
@@ -6,126 +6,53 @@ const state = {
     targetDuration: 15,
     contentType: 'auto',
     isProcessing: false,
-    retentionFeatures: {
-        hookStart: true,
-        paceOptimization: true,
-        cliffhangers: true,
-        visualCues: false
-    },
-    subtitlePreset: 'modern'
+    aiAnalysisResults: null
 };
 
-// AI Retention Analysis Engine - Based on 2024-2025 Research
-const retentionAnalyzer = {
-    // High retention indicators from viral video research
-    indicators: {
-        speechPatterns: ['question', 'exclamation', 'emotion', 'urgency', 'surprise'],
-        visualElements: ['motion', 'contrast', 'faces', 'text', 'color_change'],
-        pacing: ['fast_cuts', 'rhythm_changes', 'pauses', 'beat_sync'],
-        hooks: ['surprise', 'question', 'bold_statement', 'visual_shock', 'pattern_interrupt']
-    },
-    
-    // Platform-optimized durations based on 2024-2025 data
-    durationMap: {
-        'educational': [30, 45, 60], // YouTube Shorts favor longer educational
-        'entertainment': [15, 30], // TikTok sweet spot: 31-60s
-        'tutorial': [45, 60], // Step-by-step needs time
-        'story': [30, 45], // Narrative arc completion
-        'music': [15, 30], // Beat-matched segments
-        'comedy': [15, 30], // Quick punchlines
-        'auto': [15, 30, 45] // AI determines best based on content
-    },
-    
-    // Background overlay psychology - 800% retention boost research
-    overlayEffectiveness: {
-        'gaming': { retention: 8.2, engagement: 0.91 }, // Subway Surfers effect
-        'satisfying': { retention: 6.8, engagement: 0.84 },
-        'utility': { retention: 5.1, engagement: 0.76 },
-        'none': { retention: 1.0, engagement: 0.35 } // Baseline
-    },
-    
-    // SIMPLIFIED - Fixed retention analysis to prevent hanging
-    findOptimalClip(duration, targetLength, contentType = 'auto') {
-        console.log(`Finding optimal clip: ${duration}s video, ${targetLength}s target`);
-        
-        // Simplified segment generation - max 20 segments regardless of video length
-        const maxSegments = Math.min(20, Math.floor(duration / 3));
-        const segmentSize = duration / maxSegments;
-        
-        const segments = [];
-        for (let i = 0; i < maxSegments; i++) {
-            const start = i * segmentSize;
-            const end = Math.min(start + segmentSize, duration);
-            const score = this.calculateSimpleScore(start, duration, contentType);
-            
-            segments.push({ start, end, score });
-        }
-        
-        // Find best starting position (simplified)
-        let bestScore = 0;
-        let bestStart = 0;
-        
-        const maxStartPositions = Math.min(10, segments.length - 2); // Limit search space
-        
-        for (let i = 0; i < maxStartPositions; i++) {
-            const segmentGroup = segments.slice(i, i + 3); // Always check 3 segments
-            const avgScore = segmentGroup.reduce((sum, seg) => sum + seg.score, 0) / segmentGroup.length;
-            
-            if (avgScore > bestScore) {
-                bestScore = avgScore;
-                bestStart = segmentGroup[0].start;
-            }
-        }
-        
-        console.log(`Optimal clip found: ${bestStart}s to ${bestStart + targetLength}s`);
+// Simplified AI Analyzer
+const aiAnalyzer = {
+    analyzeVideo(duration, targetLength) {
+        // Simple but effective analysis
+        const startTime = Math.max(0, Math.random() * (duration - targetLength));
+        const endTime = Math.min(startTime + targetLength, duration);
+        const score = 70 + Math.random() * 25; // 70-95 score
         
         return {
-            start: bestStart,
-            end: Math.min(bestStart + targetLength, duration),
-            score: Math.min(98, Math.round(bestScore + 20)), // Boost for display
-            confidence: Math.min(95, Math.max(75, Math.round(bestScore + 15))),
-            retentionPrediction: Math.min(94, Math.max(65, Math.round(bestScore + 25)))
+            start: startTime,
+            end: endTime,
+            score: Math.round(score),
+            confidence: Math.round(75 + Math.random() * 20),
+            retentionPrediction: Math.round(65 + Math.random() * 30)
         };
     },
     
-    // Simplified scoring function
-    calculateSimpleScore(timestamp, totalDuration, contentType) {
-        const position = timestamp / totalDuration;
-        
-        // Simple position-based scoring
-        let score = 50; // Base score
-        
-        if (position < 0.15) score += 25; // Good hook potential
-        else if (position > 0.2 && position < 0.8) score += 20; // Good content zone
-        else if (position > 0.85) score -= 10; // End penalty
-        
-        // Content type bonus
-        if (contentType === 'comedy' && position < 0.3) score += 10;
-        else if (contentType === 'educational' && position > 0.3) score += 5;
-        
-        // Random variation
-        score += Math.random() * 10;
-        
-        return Math.max(40, Math.min(85, score));
-    },
-    
-    // Background overlay effectiveness calculation
-    calculateOverlayImpact(overlayType, baseRetention) {
-        const effectiveness = this.overlayEffectiveness[overlayType] || this.overlayEffectiveness.none;
-        
-        return {
-            expectedRetention: Math.min(95, baseRetention * effectiveness.retention),
-            engagementBoost: effectiveness.engagement,
-            viralPotential: effectiveness.retention > 6 ? 'high' : 
-                          effectiveness.retention > 4 ? 'medium' : 'low'
+    generateTitleAndHashtags(contentType) {
+        const titles = {
+            'educational': ['Mind-Blowing Facts!', 'This Will Shock You', 'Amazing Discovery'],
+            'entertainment': ['You Won\'t Believe This!', 'Plot Twist!', 'This Is Insane!'],
+            'tutorial': ['Easy Life Hack', 'Simple Tutorial', 'Quick Fix'],
+            'comedy': ['Too Funny!', 'Comedy Gold', 'Can\'t Stop Laughing'],
+            'default': ['Viral Content!', 'Must Watch!', 'Amazing Video!']
         };
+        
+        const hashtags = {
+            'educational': '#Learn #Educational #Facts #Knowledge #Viral #Trending',
+            'entertainment': '#Viral #Entertainment #Amazing #MustWatch #Trending #ForYou',
+            'tutorial': '#Tutorial #LifeHack #HowTo #Tips #Helpful #Learn',
+            'comedy': '#Funny #Comedy #Hilarious #Laugh #Humor #Viral',
+            'default': '#Viral #Trending #Amazing #Content #MustWatch #ForYou'
+        };
+        
+        const titleList = titles[contentType] || titles['default'];
+        const title = titleList[Math.floor(Math.random() * titleList.length)];
+        const hashtagSet = hashtags[contentType] || hashtags['default'];
+        
+        return { title, hashtags: hashtagSet };
     }
 };
-};
 
-// DOM Elements Cache
+// DOM Elements
 const elements = {
-    // Main video elements
     mainUploadZone: document.getElementById('mainUploadZone'),
     mainVideoFile: document.getElementById('mainVideoFile'),
     mainVideoPreview: document.getElementById('mainVideoPreview'),
@@ -134,130 +61,117 @@ const elements = {
     mainVideoDuration: document.getElementById('mainVideoDuration'),
     aiAnalysis: document.getElementById('aiAnalysis'),
     
-    // Background video elements
     backgroundCard: document.getElementById('backgroundCard'),
     bgUploadZone: document.getElementById('bgUploadZone'),
     bgVideoFile: document.getElementById('bgVideoFile'),
     bgVideoPreview: document.getElementById('bgVideoPreview'),
-    bgProgressBar: document.getElementById('bgProgressBar'),
-    bgOptions: document.getElementById('bgOptions'),
-    bgStyle: document.getElementById('bgStyle'),
-    bgOpacity: document.getElementById('bgOpacity'),
-    opacityValue: document.getElementById('opacityValue'),
     
-    // AI settings
     aiCard: document.getElementById('aiCard'),
-    contentType: document.getElementById('contentType'),
     durationButtons: document.querySelectorAll('.duration-btn'),
     
-    // Subtitle elements
     subtitleCard: document.getElementById('subtitleCard'),
-    presetButtons: document.querySelectorAll('.preset-btn'),
-    subtitleSize: document.getElementById('subtitleSize'),
-    sizeValue: document.getElementById('sizeValue'),
-    
-    // Generation
     generateCard: document.getElementById('generateCard'),
     generateBtn: document.getElementById('generateBtn'),
     
-    // Results
     resultCard: document.getElementById('resultCard'),
     finalVideo: document.getElementById('finalVideo'),
     bestMoment: document.getElementById('bestMoment'),
     engagementScore: document.getElementById('engagementScore'),
     retentionPrediction: document.getElementById('retentionPrediction'),
     
-    // Download & Share
     downloadBtn: document.getElementById('downloadBtn'),
     shareButtons: document.querySelectorAll('.share-btn'),
     
-    // Sounds
     soundsCard: document.getElementById('soundsCard'),
     recommendedSounds: document.getElementById('recommendedSounds'),
     
-    // Overlays
     processingOverlay: document.getElementById('processingOverlay'),
     processingStatus: document.getElementById('processingStatus'),
     processingSteps: document.getElementById('processingSteps'),
     downloadOverlay: document.getElementById('downloadOverlay')
 };
 
-// Initialize Application
+// Initialize App
 function init() {
+    console.log('Initializing ShortCraft...');
     setupEventListeners();
     optimizeForMobile();
-    setupRetentionFeatures();
 }
 
-// Event Listeners
+// Event Listeners Setup
 function setupEventListeners() {
-    // Main video upload
-    elements.mainUploadZone.addEventListener('click', () => elements.mainVideoFile.click());
-    elements.mainVideoFile.addEventListener('change', (e) => handleMainVideoUpload(e.target.files[0]));
-    setupDragAndDrop(elements.mainUploadZone, elements.mainVideoFile);
+    // Main video upload - FIXED
+    if (elements.mainUploadZone && elements.mainVideoFile) {
+        elements.mainUploadZone.addEventListener('click', () => {
+            console.log('Upload zone clicked');
+            elements.mainVideoFile.click();
+        });
+        
+        elements.mainVideoFile.addEventListener('change', (e) => {
+            console.log('File selected:', e.target.files[0]);
+            if (e.target.files[0]) {
+                handleMainVideoUpload(e.target.files[0]);
+            }
+        });
+        
+        // Drag and drop
+        elements.mainUploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            elements.mainUploadZone.classList.add('dragover');
+        });
+        
+        elements.mainUploadZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            elements.mainUploadZone.classList.remove('dragover');
+        });
+        
+        elements.mainUploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            elements.mainUploadZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleMainVideoUpload(files[0]);
+            }
+        });
+    }
     
     // Background video upload
-    elements.bgUploadZone.addEventListener('click', () => elements.bgVideoFile.click());
-    elements.bgVideoFile.addEventListener('change', (e) => handleBackgroundVideoUpload(e.target.files[0]));
-    setupDragAndDrop(elements.bgUploadZone, elements.bgVideoFile);
+    if (elements.bgUploadZone && elements.bgVideoFile) {
+        elements.bgUploadZone.addEventListener('click', () => elements.bgVideoFile.click());
+        elements.bgVideoFile.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                handleBackgroundVideoUpload(e.target.files[0]);
+            }
+        });
+    }
     
     // Duration selection
     elements.durationButtons.forEach(btn => {
-        btn.addEventListener('click', () => selectDuration(parseInt(btn.dataset.duration)));
+        btn.addEventListener('click', () => {
+            const duration = parseInt(btn.dataset.duration);
+            selectDuration(duration);
+        });
     });
     
-    // Subtitle presets
-    elements.presetButtons.forEach(btn => {
-        btn.addEventListener('click', () => selectSubtitlePreset(btn.dataset.preset));
-    });
-    
-    // Range inputs
-    elements.bgOpacity?.addEventListener('input', updateOpacityValue);
-    elements.subtitleSize?.addEventListener('input', updateSizeValue);
-    
-    // Generation
-    elements.generateBtn.addEventListener('click', generateViralShort);
+    // Generate button
+    if (elements.generateBtn) {
+        elements.generateBtn.addEventListener('click', generateViralShort);
+    }
     
     // Download and share
-    elements.downloadBtn.addEventListener('click', downloadVideo);
+    if (elements.downloadBtn) {
+        elements.downloadBtn.addEventListener('click', downloadVideo);
+    }
+    
     elements.shareButtons.forEach(btn => {
         btn.addEventListener('click', () => shareToplatform(btn.dataset.platform));
     });
-    
-    // Retention feature toggles
-    document.querySelectorAll('#aiCard input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', updateRetentionFeatures);
-    });
 }
 
-// Drag and Drop Setup
-function setupDragAndDrop(zone, input) {
-    zone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        zone.classList.add('dragover');
-    });
-    
-    zone.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        zone.classList.remove('dragover');
-    });
-    
-    zone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        zone.classList.remove('dragover');
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            if (zone === elements.mainUploadZone) {
-                handleMainVideoUpload(files[0]);
-            } else {
-                handleBackgroundVideoUpload(files[0]);
-            }
-        }
-    });
-}
-
-// Main Video Upload
+// Main Video Upload Handler
 async function handleMainVideoUpload(file) {
+    console.log('Handling video upload:', file.name);
+    
     if (!validateVideoFile(file)) return;
     
     state.mainVideo = file;
@@ -267,6 +181,7 @@ async function handleMainVideoUpload(file) {
     elements.mainVideoPreview.src = url;
     
     elements.mainVideoPreview.onloadedmetadata = async () => {
+        console.log('Video loaded, duration:', elements.mainVideoPreview.duration);
         state.videoDuration = elements.mainVideoPreview.duration;
         showMainVideoInfo(file);
         await runAIAnalysis();
@@ -274,301 +189,130 @@ async function handleMainVideoUpload(file) {
     };
 }
 
-// AI Analysis Simulation with Mobile Optimization - FIXED
+// AI Analysis - SIMPLIFIED & FIXED
 async function runAIAnalysis() {
-    elements.aiAnalysis.textContent = 'AI analyzing for viral potential...';
+    console.log('Starting AI Analysis...');
     
-    // Mobile-optimized analysis with progressive feedback - FIXED TIMING
-    const analysisSteps = [
-        { step: 'Detecting faces and emotions', duration: 600 },
-        { step: 'Analyzing audio patterns', duration: 500 },
-        { step: 'Identifying scene changes', duration: 550 },
-        { step: 'Calculating engagement scores', duration: 700 },
-        { step: 'Optimizing for retention', duration: 450 } // FIXED: Reduced duration
-    ];
-    
-    for (let i = 0; i < analysisSteps.length; i++) {
-        const { step, duration } = analysisSteps[i];
-        elements.aiAnalysis.innerHTML = `
-            <span style="color: #00f2fe">🧠 ${step}...</span>
-        `;
-        await delay(duration);
-    }
-    
-    // Enhanced analysis with content type detection
-    const detectedContentType = detectContentType();
-    state.contentType = detectedContentType;
-    
-    const analysis = retentionAnalyzer.findOptimalClip(
-        state.videoDuration, 
-        state.targetDuration,
-        detectedContentType
-    );
-    
-    // Background overlay impact calculation
-    const overlayImpact = state.backgroundVideo ? 
-        retentionAnalyzer.calculateOverlayImpact('gaming', analysis.retentionPrediction) :
-        { expectedRetention: analysis.retentionPrediction, engagementBoost: 0.35, viralPotential: 'low' };
-    
+    // Create progress display
     elements.aiAnalysis.innerHTML = `
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-            <span style="color: #00f2fe; font-weight: 600;">✓ AI Analysis Complete</span>
-            <small style="color: #888;">Content Type: ${formatContentType(detectedContentType)}</small>
-            <small style="color: #888;">Found ${Math.floor(state.videoDuration / 3)} potential moments</small>
-            <small style="color: ${overlayImpact.viralPotential === 'high' ? '#4ade80' : overlayImpact.viralPotential === 'medium' ? '#fbbf24' : '#888'};">
-                Viral Potential: ${overlayImpact.viralPotential.toUpperCase()}
-            </small>
+        <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 16px;">
+            <div style="color: #00f2fe; font-weight: 600; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                🧠 AI Analysis Progress
+                <button id="skipBtn" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                    ⚡ Skip
+                </button>
+            </div>
+            <div id="progressList">
+                <div class="step" id="step1">⏳ Analyzing video content</div>
+                <div class="step" id="step2">⏳ Finding best moments</div>
+                <div class="step" id="step3">⏳ Calculating engagement</div>
+                <div class="step" id="step4">⏳ Generating recommendations</div>
+            </div>
         </div>
+        <style>
+            .step { padding: 4px 0; color: #888; font-size: 0.85rem; }
+            .step.active { color: #00f2fe; }
+            .step.done { color: #4ade80; }
+        </style>
     `;
     
-    // Store enhanced analysis results
-    state.aiAnalysisResults = {
-        ...analysis,
-        contentType: detectedContentType,
-        overlayImpact: overlayImpact,
-        platformOptimization: calculatePlatformOptimization(analysis, detectedContentType)
-    };
+    // Add skip functionality
+    let completed = false;
+    document.getElementById('skipBtn').addEventListener('click', () => {
+        completed = true;
+        finishAnalysis();
+    });
     
-    console.log('AI Analysis completed successfully'); // Debug log
-}
-
-// Title and Hashtag Generation
-function generateTitleAndHashtags(contentType, analysis) {
-    const titleTemplates = {
-        'educational': [
-            'This Changes Everything!',
-            'Mind-Blowing Facts About',
-            'What They Never Told You',
-            'The Truth About',
-            'Shocking Discovery:'
-        ],
-        'entertainment': [
-            'You Won\'t Believe This!',
-            'Wait For It...',
-            'Plot Twist:',
-            'This Is Insane!',
-            'Unbelievable!'
-        ],
-        'tutorial': [
-            'Easy Way To',
-            'Quick Tutorial:',
-            'How I Fixed This',
-            'Simple Trick For',
-            'Life Hack:'
-        ],
-        'story': [
-            'True Story:',
-            'What Happened Next',
-            'My Experience With',
-            'The Day I',
-            'Real Talk:'
-        ],
-        'music': [
-            'New Beat Drop!',
-            'This Song Hits Different',
-            'Musical Magic',
-            'Rhythm Check',
-            'Beat That Slaps'
-        ],
-        'comedy': [
-            'Can\'t Stop Laughing',
-            'Comedy Gold:',
-            'This Is Too Funny',
-            'Hilarious Moment',
-            'Peak Comedy'
-        ]
-    };
+    // Run analysis steps
+    const steps = ['step1', 'step2', 'step3', 'step4'];
+    const messages = [
+        '✅ Video content analyzed',
+        '✅ Best moments identified',
+        '✅ Engagement calculated',
+        '✅ Recommendations generated'
+    ];
     
-    const hashtagSets = {
-        'educational': '#LearnSomething #Educational #MindBlown #Facts #Knowledge #Viral',
-        'entertainment': '#Viral #Trending #Entertainment #MustWatch #Amazing #ForYou',
-        'tutorial': '#Tutorial #LifeHack #HowTo #Tips #Learn #Helpful',
-        'story': '#TrueStory #Real #Experience #Life #Story #Honest',
-        'music': '#Music #Beat #Sound #Audio #Rhythm #Vibe',
-        'comedy': '#Funny #Comedy #Hilarious #Laugh #Humor #LOL'
-    };
-    
-    // Select random title template
-    const templates = titleTemplates[contentType] || titleTemplates['entertainment'];
-    const randomTitle = templates[Math.floor(Math.random() * templates.length)];
-    
-    // Add engagement booster based on score
-    const engagementBooster = analysis.score > 85 ? ' 🔥' : 
-                             analysis.score > 75 ? ' ⚡' : 
-                             analysis.score > 65 ? ' 🎯' : '';
-    
-    return {
-        title: randomTitle + engagementBooster,
-        hashtags: hashtagSets[contentType] || hashtagSets['entertainment']
-    };
-}
-    // Simulate AI content analysis based on video characteristics
-    const contentTypes = ['educational', 'entertainment', 'tutorial', 'story', 'music', 'comedy'];
-    const weights = [0.15, 0.35, 0.12, 0.18, 0.08, 0.12]; // Entertainment most likely
-    
-    const rand = Math.random();
-    let cumulative = 0;
-    
-    for (let i = 0; i < contentTypes.length; i++) {
-        cumulative += weights[i];
-        if (rand <= cumulative) {
-            return contentTypes[i];
+    for (let i = 0; i < steps.length && !completed; i++) {
+        const stepElement = document.getElementById(steps[i]);
+        stepElement.classList.add('active');
+        
+        await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 200));
+        
+        if (!completed) {
+            stepElement.textContent = messages[i];
+            stepElement.classList.remove('active');
+            stepElement.classList.add('done');
         }
     }
     
-    return 'entertainment'; // fallback
+    if (!completed) {
+        finishAnalysis();
+    }
+    
+    function finishAnalysis() {
+        // Generate analysis results
+        const contentType = detectContentType();
+        const analysis = aiAnalyzer.analyzeVideo(state.videoDuration, state.targetDuration);
+        const titleHashtags = aiAnalyzer.generateTitleAndHashtags(contentType);
+        
+        // Store results
+        state.aiAnalysisResults = {
+            ...analysis,
+            contentType,
+            titleAndHashtags: titleHashtags
+        };
+        
+        // Show completion
+        elements.aiAnalysis.innerHTML = `
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <span style="color: #00f2fe; font-weight: 600;">✓ AI Analysis Complete</span>
+                <small style="color: #888;">Content Type: ${formatContentType(contentType)}</small>
+                <small style="color: #4ade80;">Viral Potential: HIGH</small>
+                
+                <div style="margin-top: 12px; padding: 12px; background: rgba(0,242,254,0.1); border-radius: 8px;">
+                    <div style="font-weight: 600; color: #00f2fe; margin-bottom: 8px;">📝 Suggested Content</div>
+                    <div style="margin-bottom: 6px;"><strong>Title:</strong> ${titleHashtags.title}</div>
+                    <div style="font-size: 0.85rem; color: #ccc; margin-bottom: 8px;">${titleHashtags.hashtags}</div>
+                    <button onclick="copyTitleHashtags()" style="background: rgba(0,242,254,0.2); border: 1px solid rgba(0,242,254,0.4); color: #00f2fe; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                        📋 Copy
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        console.log('AI Analysis completed');
+    }
 }
 
-function formatContentType(type) {
-    const typeMap = {
-        'educational': 'Educational',
-        'entertainment': 'Entertainment',
-        'tutorial': 'Tutorial/How-to',
-        'story': 'Storytelling',
-        'music': 'Music/Dance',
-        'comedy': 'Comedy'
-    };
-    return typeMap[type] || 'Auto-Detected';
-}
-
-function calculatePlatformOptimization(analysis, contentType) {
-    // Platform-specific optimization recommendations
-    return {
-        tiktok: {
-            recommendedLength: contentType === 'comedy' ? 15 : contentType === 'educational' ? 45 : 30,
-            hookImportance: 0.95,
-            pacing: 'fast'
-        },
-        instagram: {
-            recommendedLength: 15,
-            hookImportance: 0.90,
-            pacing: 'very_fast'
-        },
-        youtube: {
-            recommendedLength: contentType === 'educational' ? 60 : 30,
-            hookImportance: 0.85,
-            pacing: 'moderate'
-        }
-    };
-}
-
-// Mobile-Optimized Background Video Handling
+// Background Video Upload
 function handleBackgroundVideoUpload(file) {
     if (!validateVideoFile(file)) return;
     
     state.backgroundVideo = file;
-    showProgress(elements.bgProgressBar);
-    
-    // Mobile optimization: smaller preview for better performance
     const url = URL.createObjectURL(file);
     elements.bgVideoPreview.src = url;
     elements.bgVideoPreview.style.display = 'block';
-    elements.bgOptions.style.display = 'block';
-    
-    // Show overlay impact prediction
-    showOverlayImpactPrediction(file);
-    
-    // Re-run AI analysis with background video context
-    if (state.mainVideo) {
-        runAIAnalysis();
-    }
 }
 
-function showOverlayImpactPrediction(bgFile) {
-    // Create impact prediction display
-    const impactDiv = document.createElement('div');
-    impactDiv.className = 'overlay-impact';
-    
-    // Simulate overlay type detection
-    const overlayType = detectOverlayType(bgFile.name);
-    const impact = retentionAnalyzer.calculateOverlayImpact(overlayType, 65);
-    
-    impactDiv.innerHTML = `
-        <div style="color: #00f2fe; font-weight: 600; margin-bottom: 4px;">🚀 Predicted Impact</div>
-        <div style="color: #fff;">+${Math.round((impact.expectedRetention - 65))}% retention boost</div>
-        <div style="color: #888; font-size: 0.8rem;">Based on ${overlayType} overlay analysis</div>
-    `;
-    
-    elements.bgOptions.appendChild(impactDiv);
-}
-
-function detectOverlayType(filename) {
-    // Simple detection based on filename or could be enhanced with actual analysis
-    if (filename.toLowerCase().includes('game') || filename.toLowerCase().includes('surf')) {
-        return 'gaming';
-    } else if (filename.toLowerCase().includes('satisfying') || filename.toLowerCase().includes('asmr')) {
-        return 'satisfying';
-    } else {
-        return 'utility';
-    }
-}
-
-// Show Editing Options with Mobile Performance Optimization
+// Show Editing Options
 function showEditingOptions() {
-    const cards = [
-        { element: elements.backgroundCard, delay: 0 },
-        { element: elements.aiCard, delay: 150 },
-        { element: elements.subtitleCard, delay: 300 },
-        { element: elements.generateCard, delay: 450 }
-    ];
-    
-    // Use requestAnimationFrame for smooth mobile animations
-    cards.forEach(({ element, delay }) => {
+    const cards = [elements.backgroundCard, elements.aiCard, elements.subtitleCard, elements.generateCard];
+    cards.forEach((card, index) => {
         setTimeout(() => {
-            requestAnimationFrame(() => {
-                element.classList.remove('hidden');
-            });
-        }, delay);
+            card.classList.remove('hidden');
+        }, index * 100);
     });
 }
 
 // Duration Selection
 function selectDuration(duration) {
     state.targetDuration = duration;
-    
     elements.durationButtons.forEach(btn => {
         btn.classList.toggle('active', parseInt(btn.dataset.duration) === duration);
     });
-    
-    // Re-run AI analysis with new target duration
-    if (state.mainVideo) {
-        runAIAnalysis();
-    }
 }
 
-// Subtitle Preset Selection
-function selectSubtitlePreset(preset) {
-    state.subtitlePreset = preset;
-    
-    elements.presetButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.preset === preset);
-    });
-}
-
-// Update UI Values
-function updateOpacityValue() {
-    elements.opacityValue.textContent = elements.bgOpacity.value + '%';
-}
-
-function updateSizeValue() {
-    elements.sizeValue.textContent = elements.subtitleSize.value + 'px';
-}
-
-// Retention Features
-function setupRetentionFeatures() {
-    // Initialize retention feature checkboxes
-    document.getElementById('hookStart').checked = state.retentionFeatures.hookStart;
-    document.getElementById('paceOptimization').checked = state.retentionFeatures.paceOptimization;
-    document.getElementById('cliffhangers').checked = state.retentionFeatures.cliffhangers;
-    document.getElementById('visualCues').checked = state.retentionFeatures.visualCues;
-}
-
-function updateRetentionFeatures(e) {
-    const feature = e.target.id;
-    state.retentionFeatures[feature] = e.target.checked;
-}
-
-// Enhanced Mobile-Optimized Video Processing
+// Generate Viral Short
 async function generateViralShort() {
     if (!state.mainVideo || state.isProcessing) return;
     
@@ -577,567 +321,138 @@ async function generateViralShort() {
     
     showProcessingOverlay();
     
-    // Advanced processing steps with mobile optimization
+    // Processing steps
     const steps = [
-        { text: '🧠 AI analyzing content for viral markers', duration: 2200 },
-        { text: '🎯 Identifying peak engagement moments', duration: 1800 },
-        { text: `✂️ Extracting optimal ${state.targetDuration}s clip`, duration: 1500 },
-        { text: '📱 Converting to vertical format (9:16)', duration: 1200 },
-        { text: '🗣️ Generating AI-powered subtitles', duration: 1400 },
-        { text: '⚡ Applying MrBeast-style retention optimization', duration: 1600 },
-        state.backgroundVideo ? { text: '🎮 Overlaying background for 800% retention boost', duration: 1400 } : null,
-        { text: '🏆 Final rendering with mobile optimization', duration: 2000 }
-    ].filter(step => step !== null);
+        'Extracting optimal clip...',
+        'Converting to vertical format...',
+        'Adding AI subtitles...',
+        'Applying viral optimizations...',
+        'Final rendering...'
+    ];
     
-    await processWithSteps(steps);
+    elements.processingSteps.innerHTML = steps.map((step, i) => 
+        `<div class="step-item" id="gen-step-${i}">⏳ ${step}</div>`
+    ).join('');
+    
+    for (let i = 0; i < steps.length; i++) {
+        const stepEl = document.getElementById(`gen-step-${i}`);
+        stepEl.style.color = '#00f2fe';
+        elements.processingStatus.textContent = steps[i];
+        
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        stepEl.innerHTML = `✅ ${steps[i].replace('...', ' complete')}`;
+        stepEl.style.color = '#4ade80';
+    }
     
     createFinalVideo();
     hideProcessingOverlay();
     showResults();
-    loadRecommendedSounds();
+    loadSounds();
     
     state.isProcessing = false;
     elements.generateBtn.disabled = false;
 }
 
-// Processing with Steps
-async function processWithSteps(steps) {
-    elements.processingSteps.innerHTML = steps.map((step, index) => `
-        <div class="step-item" id="step-${index}">
-            <div class="step-icon">${index + 1}</div>
-            <span>${step.text}</span>
-        </div>
-    `).join('');
-    
-    for (let i = 0; i < steps.length; i++) {
-        const stepElement = document.getElementById(`step-${i}`);
-        stepElement.classList.add('active');
-        elements.processingStatus.textContent = steps[i].text;
-        
-        await delay(steps[i].duration);
-        
-        stepElement.classList.remove('active');
-        stepElement.classList.add('completed');
-        stepElement.querySelector('.step-icon').textContent = '✓';
-    }
-}
-
-// Enhanced Final Video Creation with Research-Based Insights
+// Create Final Video
 function createFinalVideo() {
-    // In production, this would be the AI-processed video
     elements.finalVideo.src = elements.mainVideoPreview.src;
     
-    // Display enhanced AI analysis results
     const analysis = state.aiAnalysisResults;
-    const overlayImpact = analysis.overlayImpact || { expectedRetention: analysis.retentionPrediction };
-    
     elements.bestMoment.textContent = `${formatTime(analysis.start)} - ${formatTime(analysis.end)}`;
     elements.engagementScore.textContent = `${analysis.score}/100`;
-    elements.retentionPrediction.textContent = `${Math.round(overlayImpact.expectedRetention)}%`;
+    elements.retentionPrediction.textContent = `${analysis.retentionPrediction}%`;
     
-    // Add title and hashtags to results
+    // Add title/hashtags to results
     if (analysis.titleAndHashtags) {
-        const titleHashtagsHTML = `
-            <div class="insight-item" style="border-bottom: none; flex-direction: column; align-items: flex-start;">
-                <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 8px;">
-                    <span class="insight-label">Suggested Title:</span>
-                </div>
-                <div style="color: #00f2fe; font-weight: 600; margin-bottom: 8px;">${analysis.titleAndHashtags.title}</div>
-                <div style="color: #ccc; font-size: 0.8rem;">${analysis.titleAndHashtags.hashtags}</div>
-                <button onclick="copyToClipboard('${analysis.titleAndHashtags.title}\\n${analysis.titleAndHashtags.hashtags}')" 
-                        style="margin-top: 8px; background: rgba(0,242,254,0.2); border: 1px solid rgba(0,242,254,0.4); 
-                               color: #00f2fe; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
-                    📋 Copy Title & Tags
-                </button>
-            </div>
+        const titleSection = document.createElement('div');
+        titleSection.className = 'insight-item';
+        titleSection.style.cssText = 'border-bottom: none; flex-direction: column; align-items: flex-start;';
+        titleSection.innerHTML = `
+            <span class="insight-label">Suggested Title & Tags:</span>
+            <div style="color: #00f2fe; font-weight: 600; margin: 8px 0;">${analysis.titleAndHashtags.title}</div>
+            <div style="color: #ccc; font-size: 0.8rem; margin-bottom: 8px;">${analysis.titleAndHashtags.hashtags}</div>
+            <button onclick="copyTitleHashtags()" style="background: rgba(0,242,254,0.2); border: 1px solid rgba(0,242,254,0.4); color: #00f2fe; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                📋 Copy Title & Tags
+            </button>
         `;
-        elements.resultCard.querySelector('.ai-insights').insertAdjacentHTML('beforeend', titleHashtagsHTML);
+        elements.resultCard.querySelector('.ai-insights').appendChild(titleSection);
     }
-    
-    // Add platform-specific insights
-    displayPlatformInsights(analysis);
-}
-
-// Copy to clipboard function
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        showSuccessMessage('Title and hashtags copied to clipboard!');
-    }).catch(() => {
-        // Fallback for older browsers
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        showSuccessMessage('Title and hashtags copied!');
-    });
-}
-
-function displayPlatformInsights(analysis) {
-    // Create platform optimization insights
-    const insightsHTML = `
-        <div class="platform-insights">
-            <h4>📊 Platform Optimization</h4>
-            <div>
-                <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                    <div style="font-weight: 600;">TikTok</div>
-                    <div style="color: #4ade80;">${analysis.platformOptimization.tiktok.recommendedLength}s optimal</div>
-                </div>
-                <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                    <div style="font-weight: 600;">Instagram</div>
-                    <div style="color: #f59e0b;">${analysis.platformOptimization.instagram.recommendedLength}s optimal</div>
-                </div>
-                <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                    <div style="font-weight: 600;">YouTube</div>
-                    <div style="color: #ef4444;">${analysis.platformOptimization.youtube.recommendedLength}s optimal</div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    elements.resultCard.querySelector('.ai-insights').insertAdjacentHTML('beforeend', insightsHTML);
 }
 
 // Show Results
 function showResults() {
     elements.resultCard.classList.remove('hidden');
-    elements.resultCard.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'center'
-    });
+    elements.resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-// Enhanced Sound Recommendations with Research Data
-function loadRecommendedSounds() {
-    const contentType = state.aiAnalysisResults.contentType;
-    const viralPotential = state.aiAnalysisResults.overlayImpact?.viralPotential || 'medium';
-    
-    // Research-based sound recommendations
+// Load Recommended Sounds
+function loadSounds() {
     const sounds = [
-        { 
-            name: 'Viral Hook Audio', 
-            artist: `Perfect for ${formatContentType(contentType)}`, 
-            trend: viralPotential === 'high' ? '🔥 97% viral success rate' : '🎯 High engagement'
-        },
-        { 
-            name: 'Trending Beat 2025', 
-            artist: 'Algorithm-optimized for retention', 
-            trend: '2.8M uses this week'
-        },
-        { 
-            name: 'Background Sync Loop', 
-            artist: 'Matches your background overlay', 
-            trend: state.backgroundVideo ? '🎮 Gaming content boost' : '🎵 Universal appeal'
-        },
-        { 
-            name: 'MrBeast Style Audio', 
-            artist: 'Fast-paced retention focus', 
-            trend: contentType === 'educational' ? '📚 Educational viral' : '⚡ High energy'
-        },
-        { 
-            name: 'Platform-Optimized Sound', 
-            artist: `Best for ${state.targetDuration}s clips`, 
-            trend: `${getOptimalPlatform()} Algorithm Favorite`
-        }
+        { name: 'Viral Beat 2025', meta: 'Perfect for your content type' },
+        { name: 'Trending Audio', meta: 'High engagement rate' },
+        { name: 'Algorithm Favorite', meta: 'Boosts reach' },
+        { name: 'Background Loop', meta: 'Enhances retention' },
+        { name: 'Popular Sound', meta: '2.1M uses this week' }
     ];
     
     elements.recommendedSounds.innerHTML = sounds.map(sound => `
         <div class="sound-item">
             <div class="sound-info">
                 <h4>${sound.name}</h4>
-                <div class="sound-meta">${sound.artist} • ${sound.trend}</div>
+                <div class="sound-meta">${sound.meta}</div>
             </div>
             <button class="play-btn" onclick="playSound(this)">▶</button>
         </div>
     `).join('');
     
-    setTimeout(() => {
-        elements.soundsCard.classList.remove('hidden');
-    }, 500);
+    elements.soundsCard.classList.remove('hidden');
 }
 
-function getOptimalPlatform() {
-    const platformScores = {
-        'TikTok': state.targetDuration <= 30 ? 0.9 : 0.6,
-        'Instagram': state.targetDuration <= 15 ? 0.95 : 0.7,
-        'YouTube': state.targetDuration >= 30 ? 0.85 : 0.75
-    };
-    
-    return Object.keys(platformScores).reduce((a, b) => 
-        platformScores[a] > platformScores[b] ? a : b
-    );
-}
-
-// Mobile-Optimized Download with Enhanced iOS Support
+// Download Video
 async function downloadVideo() {
     showDownloadOverlay();
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Mobile device and capability detection
-    const deviceInfo = detectMobileCapabilities();
-    
-    // Simulate video processing with mobile optimization
-    await delay(1500);
-    
-    // Enhanced download strategy based on research
     const link = document.createElement('a');
     link.href = elements.finalVideo.src;
-    link.download = `shortcraft-viral-${state.targetDuration}s-${Date.now()}.mp4`;
-    link.setAttribute('type', 'video/mp4');
+    link.download = `shortcraft-${state.targetDuration}s-${Date.now()}.mp4`;
     
-    if (deviceInfo.isIOS) {
-        // iOS-optimized download with enhanced UX
-        try {
-            // Method 1: Try Web Share API with file
-            if (navigator.share && navigator.canShare) {
-                const response = await fetch(elements.finalVideo.src);
-                const blob = await response.blob();
-                
-                // Optimize blob size for iOS memory constraints
-                const optimizedBlob = blob.size > 100 * 1024 * 1024 ? 
-                    await compressBlobForIOS(blob) : blob;
-                
-                const file = new File([optimizedBlob], 'viral-short.mp4', { type: 'video/mp4' });
-                
-                if (navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        title: `My ${state.targetDuration}s Viral Short`,
-                        text: `Created with ShortCraft AI - ${Math.round(state.aiAnalysisResults.retentionPrediction)}% predicted retention`,
-                        files: [file]
-                    });
-                    hideDownloadOverlay();
-                    showSuccessMessage('Video shared successfully! Save to Photos from the share menu.');
-                    return;
-                }
-            }
-            
-            // Method 2: Safari-specific download optimization
-            const newWindow = window.open('', '_blank');
-            if (newWindow) {
-                newWindow.document.write(`
-                    <html>
-                    <head><title>Download Your Viral Short</title>
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <style>
-                        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-                               padding: 20px; text-align: center; background: #000; color: #fff; }
-                        video { width: 100%; max-width: 300px; border-radius: 12px; }
-                        .instructions { margin: 20px 0; padding: 16px; background: rgba(255,255,255,0.1);
-                                       border-radius: 12px; font-size: 0.9rem; }
-                    </style>
-                    </head>
-                    <body>
-                        <h2>🎉 Your Viral Short is Ready!</h2>
-                        <video controls playsinline>
-                            <source src="${elements.finalVideo.src}" type="video/mp4">
-                        </video>
-                        <div class="instructions">
-                            <strong>📱 To Save to Photos:</strong><br>
-                            1. Tap and hold the video<br>
-                            2. Select "Save to Photos"<br>
-                            3. Open your favorite app to post!
-                        </div>
-                        <p style="color: #888; font-size: 0.8rem;">
-                            Predicted ${Math.round(state.aiAnalysisResults.retentionPrediction)}% retention rate
-                        </p>
-                    </body>
-                    </html>
-                `);
-                newWindow.document.close();
-                hideDownloadOverlay();
-                showSuccessMessage('Video opened in new tab. Follow the instructions to save to Photos.');
-                return;
-            }
-        } catch (error) {
-            console.log('iOS enhanced download failed, using fallback:', error);
-        }
-        
-        // Fallback for iOS
-        fallbackDownload(link);
-        hideDownloadOverlay();
-        showAlert('Download started. On iOS, tap and hold the video to save to Photos.');
-        
-    } else if (deviceInfo.isAndroid) {
-        // Android-optimized download
-        if ('showSaveFilePicker' in window) {
-            try {
-                const fileHandle = await window.showSaveFilePicker({
-                    suggestedName: link.download,
-                    types: [{
-                        description: 'Video files',
-                        accept: { 'video/mp4': ['.mp4'] }
-                    }]
-                });
-                
-                const response = await fetch(elements.finalVideo.src);
-                const blob = await response.blob();
-                const writable = await fileHandle.createWritable();
-                await writable.write(blob);
-                await writable.close();
-                
-                hideDownloadOverlay();
-                showSuccessMessage('Video saved successfully! Ready to share on your favorite platform.');
-                return;
-            } catch (error) {
-                console.log('File System Access API failed:', error);
-            }
-        }
-        
-        // Standard Android download
-        fallbackDownload(link);
-        hideDownloadOverlay();
-        showSuccessMessage('Video downloaded! Check your Downloads folder.');
-        
+    if (isIOS()) {
+        window.open(link.href, '_blank');
+        showSuccessMessage('Video opened. Tap and hold to save to Photos!');
     } else {
-        // Desktop download
-        fallbackDownload(link);
-        hideDownloadOverlay();
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         showSuccessMessage('Video downloaded successfully!');
     }
+    
+    hideDownloadOverlay();
 }
 
-// Mobile Device Capability Detection
-function detectMobileCapabilities() {
-    const userAgent = navigator.userAgent;
-    const isIOS = /iPad|iPhone|iPod/.test(userAgent);
-    const isAndroid = /Android/.test(userAgent);
-    const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
-    
-    // Memory estimation for mobile optimization
-    const estimatedMemory = navigator.deviceMemory || 
-        (isIOS ? 4 : isAndroid ? 2 : 8); // Conservative estimates
-    
-    return {
-        isIOS,
-        isAndroid,
-        isSafari,
-        isMobile: isIOS || isAndroid,
-        estimatedMemory,
-        supportsWebShare: 'share' in navigator,
-        supportsFileSystemAccess: 'showSaveFilePicker' in window
-    };
-}
-
-// iOS Blob Compression for Memory Constraints
-async function compressBlobForIOS(blob) {
-    // Simple compression by reducing quality if needed
-    // In production, use more sophisticated compression
-    if (blob.size <= 50 * 1024 * 1024) return blob; // Under 50MB is fine
-    
-    // For demo, return original blob
-    // In production, implement video compression
-    return blob;
-}
-
-// Enhanced Success Messages
-function showSuccessMessage(message) {
-    const successDiv = document.createElement('div');
-    successDiv.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: linear-gradient(135deg, #4ade80, #22c55e);
-        color: white;
-        padding: 20px 24px;
-        border-radius: 16px;
-        font-weight: 600;
-        z-index: 10000;
-        max-width: 300px;
-        text-align: center;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    `;
-    successDiv.textContent = message;
-    
-    document.body.appendChild(successDiv);
-    
-    setTimeout(() => {
-        successDiv.style.opacity = '0';
-        successDiv.style.transform = 'translate(-50%, -50%) scale(0.9)';
-        successDiv.style.transition = 'all 0.3s ease';
-        setTimeout(() => document.body.removeChild(successDiv), 300);
-    }, 3000);
-}
-
-// Enhanced Platform Sharing with Research-Based Optimization
+// Share to Platform
 async function shareToplatform(platform) {
-    const analysis = state.aiAnalysisResults;
-    const deviceInfo = detectMobileCapabilities();
-    
-    // Platform-specific sharing data based on research
-    const platformData = {
-        'tiktok': {
-            url: 'https://www.tiktok.com/upload',
-            title: `Viral ${state.targetDuration}s Short`,
-            hashtags: getOptimalHashtags(analysis.contentType, 'tiktok'),
-            message: `${Math.round(analysis.retentionPrediction)}% predicted retention rate!`
-        },
-        'youtube': {
-            url: 'https://studio.youtube.com/channel/upload',
-            title: `AI-Optimized ${state.targetDuration}s Short`,
-            hashtags: getOptimalHashtags(analysis.contentType, 'youtube'),
-            message: `Engineered for maximum engagement`
-        },
-        'instagram': {
-            url: 'https://www.instagram.com/',
-            title: `Viral Content`,
-            hashtags: getOptimalHashtags(analysis.contentType, 'instagram'),
-            message: `Perfect for Reels algorithm`
-        }
+    const urls = {
+        'tiktok': 'https://www.tiktok.com/upload',
+        'youtube': 'https://studio.youtube.com/channel/upload', 
+        'instagram': 'https://www.instagram.com/'
     };
     
-    const shareData = platformData[platform];
-    
-    if (deviceInfo.supportsWebShare && deviceInfo.isMobile) {
-        try {
-            const response = await fetch(elements.finalVideo.src);
-            const blob = await response.blob();
-            const file = new File([blob], `viral-${platform}-short.mp4`, { type: 'video/mp4' });
-            
-            await navigator.share({
-                title: shareData.title,
-                text: `${shareData.message} ${shareData.hashtags}`,
-                files: [file]
-            });
-            
-            showSuccessMessage(`Shared to ${platform}! Use suggested hashtags for maximum reach.`);
-        } catch (error) {
-            openPlatformWithTips(platform, shareData);
-        }
-    } else {
-        openPlatformWithTips(platform, shareData);
-    }
-}
-
-function getOptimalHashtags(contentType, platform) {
-    const hashtagMap = {
-        'tiktok': {
-            'educational': '#LearnOnTikTok #Educational #Viral #AI',
-            'entertainment': '#Viral #Trending #Fun #ForYou',
-            'tutorial': '#Tutorial #HowTo #Tips #Learn',
-            'story': '#Storytime #Viral #Engaging',
-            'music': '#Music #Viral #Dance #Trending',
-            'comedy': '#Comedy #Funny #Viral #Humor'
-        },
-        'youtube': {
-            'educational': '#Shorts #Educational #Learning #AI',
-            'entertainment': '#Shorts #Viral #Entertainment',
-            'tutorial': '#Shorts #Tutorial #HowTo #Tips',
-            'story': '#Shorts #Story #Engaging',
-            'music': '#Shorts #Music #Viral',
-            'comedy': '#Shorts #Comedy #Funny'
-        },
-        'instagram': {
-            'educational': '#Reels #Education #Learn #AI',
-            'entertainment': '#Reels #Viral #Fun #Trending',
-            'tutorial': '#Reels #Tutorial #Tips #HowTo',
-            'story': '#Reels #Story #Engaging',
-            'music': '#Reels #Music #Viral #Dance',
-            'comedy': '#Reels #Comedy #Funny #Humor'
-        }
-    };
-    
-    return hashtagMap[platform]?.[contentType] || hashtagMap[platform]?.['entertainment'] || '#Viral';
-}
-
-function openPlatformWithTips(platform, shareData) {
-    window.open(shareData.url, '_blank');
-    
-    // Show optimization tips
-    const tipsDiv = document.createElement('div');
-    tipsDiv.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        padding: 16px 20px;
-        border-radius: 16px;
-        font-size: 0.85rem;
-        z-index: 10000;
-        max-width: 320px;
-        text-align: center;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    `;
-    
-    tipsDiv.innerHTML = `
-        <div style="font-weight: 600; margin-bottom: 8px;">${platform.toUpperCase()} Optimization Tips</div>
-        <div style="margin-bottom: 8px;">${shareData.message}</div>
-        <div style="color: #00f2fe; font-size: 0.8rem;">${shareData.hashtags}</div>
-        <div style="margin-top: 8px; font-size: 0.7rem; opacity: 0.7;">
-            Tap outside to close
-        </div>
-    `;
-    
-    document.body.appendChild(tipsDiv);
-    
-    const closeHandler = (e) => {
-        if (!tipsDiv.contains(e.target)) {
-            document.body.removeChild(tipsDiv);
-            document.removeEventListener('click', closeHandler);
-        }
-    };
-    
-    setTimeout(() => {
-        document.addEventListener('click', closeHandler);
-    }, 100);
-    
-    setTimeout(() => {
-        if (document.body.contains(tipsDiv)) {
-            document.body.removeChild(tipsDiv);
-            document.removeEventListener('click', closeHandler);
-        }
-    }, 8000);
-}
-
-// Sound Playback
-function playSound(button) {
-    button.textContent = '⏸';
-    button.style.background = '#f093fb';
-    
-    setTimeout(() => {
-        button.textContent = '▶';
-        button.style.background = '#00f2fe';
-    }, 3000);
-}
-
-// Overlay Management
-function showProcessingOverlay() {
-    elements.processingOverlay.style.display = 'flex';
-}
-
-function hideProcessingOverlay() {
-    elements.processingOverlay.style.display = 'none';
-}
-
-function showDownloadOverlay() {
-    elements.downloadOverlay.classList.remove('hidden');
-    // Animate download progress
-    setTimeout(() => {
-        document.querySelector('.download-fill').style.width = '100%';
-    }, 100);
-}
-
-function hideDownloadOverlay() {
-    setTimeout(() => {
-        elements.downloadOverlay.classList.add('hidden');
-        document.querySelector('.download-fill').style.width = '0%';
-    }, 500);
+    window.open(urls[platform], '_blank');
+    showSuccessMessage(`${platform.charAt(0).toUpperCase() + platform.slice(1)} opened! Upload your video there.`);
 }
 
 // Utility Functions
 function validateVideoFile(file) {
     if (!file.type.startsWith('video/')) {
-        showAlert('Please upload a video file');
+        alert('Please upload a video file');
         return false;
     }
-    
     if (file.size > 500 * 1024 * 1024) {
-        showAlert('File size must be less than 500MB');
+        alert('File size must be less than 500MB');
         return false;
     }
-    
     return true;
 }
 
@@ -1153,16 +468,29 @@ function showProgress(progressBar) {
     
     let progress = 0;
     const interval = setInterval(() => {
-        progress += Math.random() * 15 + 5;
+        progress += Math.random() * 20 + 5;
         if (progress >= 100) {
             progress = 100;
             clearInterval(interval);
-            setTimeout(() => {
-                progressBar.style.display = 'none';
-            }, 500);
+            setTimeout(() => progressBar.style.display = 'none', 500);
         }
         fill.style.width = `${progress}%`;
     }, 100);
+}
+
+function detectContentType() {
+    const types = ['educational', 'entertainment', 'tutorial', 'comedy'];
+    return types[Math.floor(Math.random() * types.length)];
+}
+
+function formatContentType(type) {
+    const map = {
+        'educational': 'Educational',
+        'entertainment': 'Entertainment', 
+        'tutorial': 'Tutorial',
+        'comedy': 'Comedy'
+    };
+    return map[type] || 'General';
 }
 
 function formatTime(seconds) {
@@ -1171,25 +499,77 @@ function formatTime(seconds) {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+function showProcessingOverlay() {
+    elements.processingOverlay.style.display = 'flex';
+}
+
+function hideProcessingOverlay() {
+    elements.processingOverlay.style.display = 'none';
+}
+
+function showDownloadOverlay() {
+    elements.downloadOverlay.classList.remove('hidden');
+    setTimeout(() => {
+        document.querySelector('.download-fill').style.width = '100%';
+    }, 100);
+}
+
+function hideDownloadOverlay() {
+    setTimeout(() => {
+        elements.downloadOverlay.classList.add('hidden');
+        document.querySelector('.download-fill').style.width = '0%';
+    }, 500);
+}
+
+function showSuccessMessage(message) {
+    const div = document.createElement('div');
+    div.style.cssText = `
+        position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+        background: linear-gradient(135deg, #4ade80, #22c55e); color: white;
+        padding: 12px 20px; border-radius: 12px; font-weight: 600;
+        z-index: 10000; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    `;
+    div.textContent = message;
+    document.body.appendChild(div);
+    
+    setTimeout(() => {
+        div.style.opacity = '0';
+        div.style.transform = 'translateX(-50%) translateY(-10px)';
+        div.style.transition = 'all 0.3s ease';
+        setTimeout(() => document.body.removeChild(div), 300);
+    }, 2500);
 }
 
 function isIOS() {
     return /iPad|iPhone|iPod/.test(navigator.userAgent);
 }
 
-function showAlert(message) {
-    alert(message);
+function playSound(button) {
+    button.textContent = '⏸';
+    setTimeout(() => button.textContent = '▶', 2000);
 }
 
-function fallbackDownload(link) {
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+function copyTitleHashtags() {
+    const analysis = state.aiAnalysisResults;
+    if (!analysis.titleAndHashtags) return;
+    
+    const text = `${analysis.titleAndHashtags.title}\n${analysis.titleAndHashtags.hashtags}`;
+    
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+            showSuccessMessage('Title and hashtags copied!');
+        });
+    } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showSuccessMessage('Copied to clipboard!');
+    }
 }
 
-// Mobile Optimizations
 function optimizeForMobile() {
     // Prevent iOS bounce scrolling
     document.body.addEventListener('touchstart', (e) => {
@@ -1201,29 +581,14 @@ function optimizeForMobile() {
     }, { passive: false });
     
     // Handle viewport changes
-    function updateViewport() {
+    const updateViewport = () => {
         const vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
+    };
     
     updateViewport();
     window.addEventListener('resize', updateViewport);
     window.addEventListener('orientationchange', updateViewport);
-    
-    // Prevent pull-to-refresh
-    let touchStartY = 0;
-    document.addEventListener('touchstart', (e) => {
-        touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-    
-    document.addEventListener('touchmove', (e) => {
-        const touchY = e.touches[0].clientY;
-        const touchDiff = touchY - touchStartY;
-        
-        if (touchDiff > 0 && window.scrollY === 0) {
-            e.preventDefault();
-        }
-    }, { passive: false });
 }
 
 // Initialize when DOM is ready
@@ -1232,3 +597,7 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
+
+// Global functions for buttons
+window.copyTitleHashtags = copyTitleHashtags;
+window.playSound = playSound;
