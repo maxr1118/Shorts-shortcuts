@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="AI-powered video editor for creating viral TikTok, Instagram Reels, and YouTube Shorts with smart cropping and face tracking">
-    <meta name="keywords" content="video editor, AI, TikTok, Instagram Reels, YouTube Shorts, viral content, face tracking, mobile editor">
-    <meta name="theme-color" content="#667eea">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
     <title>ShortCraft - AI Video Editor</title>
+    
+    <!-- Core Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.15.0/dist/tf-core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection@1.0.2/dist/face-detection.js"></script>
+    
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
 </head>
 <body>
-    <div class="gradient-bg" aria-hidden="true"></div>
+    <div class="gradient-bg"></div>
     
     <div class="container">
         <header class="header">
@@ -21,171 +25,133 @@
             <p class="tagline">AI-powered video editing for viral content</p>
         </header>
 
-        <!-- Upload Section -->
-        <section class="card" role="main">
+        <!-- Upload Video -->
+        <section class="card">
             <h2 class="section-title">🎬 Upload Video</h2>
-            <div class="upload-zone" id="mainUploadZone" role="button" tabindex="0" aria-label="Click to upload video">
-                <div class="upload-icon" aria-hidden="true">📱</div>
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-icon">📱</div>
                 <div class="upload-text">Upload your video</div>
                 <div class="upload-subtext">AI will find the best moments automatically</div>
             </div>
-            <input type="file" id="mainVideoFile" class="file-input" accept="video/*" aria-label="Video file input">
+            <input type="file" id="videoFile" accept="video/*" style="display: none;">
             
-            <div class="progress-bar" id="mainProgressBar" aria-hidden="true">
+            <div class="progress-bar" id="progressBar">
                 <div class="progress-fill"></div>
             </div>
 
-            <video class="video-preview" id="mainVideoPreview" controls playsinline muted aria-label="Video preview"></video>
+            <video id="videoPreview" controls playsinline muted></video>
             
-            <div class="video-info" id="mainVideoInfo">
+            <div id="videoInfo">
                 <div class="info-row">
-                    <span class="info-label">Duration:</span>
-                    <span class="info-value" id="mainVideoDuration">--</span>
+                    <span>Duration:</span>
+                    <span id="videoDuration">--</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">AI Status:</span>
-                    <span class="info-value" id="aiStatus">Ready to analyze</span>
+                    <span>AI Status:</span>
+                    <span id="aiStatus">Ready</span>
                 </div>
             </div>
-            
-            <div id="aiAnalysis" aria-live="polite"></div>
         </section>
 
-        <!-- Background Video Section -->
-        <section class="card hidden" id="backgroundCard">
-            <h2 class="section-title">🎮 Background Video <span class="optional-badge">Optional</span></h2>
-            <p class="feature-desc">Add engaging background footage to boost retention</p>
-            
-            <div class="upload-zone secondary" id="bgUploadZone" role="button" tabindex="0" aria-label="Upload background video">
-                <div class="upload-icon" aria-hidden="true">🎯</div>
-                <div class="upload-text">Add background video</div>
-                <div class="upload-subtext">Gaming, ASMR, or visual content</div>
-            </div>
-            <input type="file" id="bgVideoFile" class="file-input" accept="video/*" aria-label="Background video file input">
-            
-            <video class="video-preview small" id="bgVideoPreview" controls playsinline muted aria-label="Background video preview"></video>
-        </section>
-
-        <!-- AI Settings -->
-        <section class="card hidden" id="aiCard">
-            <h2 class="section-title">🧠 AI Settings</h2>
+        <!-- Settings -->
+        <section class="card hidden" id="settingsCard">
+            <h2 class="section-title">⚙️ Settings</h2>
             
             <div class="option-group">
-                <label class="option-label">Target Duration</label>
-                <div class="duration-buttons" role="radiogroup" aria-label="Select video duration">
-                    <button class="duration-btn active" data-duration="15" role="radio" aria-checked="true">15s</button>
-                    <button class="duration-btn" data-duration="30" role="radio" aria-checked="false">30s</button>
-                    <button class="duration-btn" data-duration="45" role="radio" aria-checked="false">45s</button>
-                    <button class="duration-btn" data-duration="60" role="radio" aria-checked="false">60s</button>
+                <label>Target Duration</label>
+                <div class="duration-buttons">
+                    <button class="duration-btn active" data-duration="15">15s</button>
+                    <button class="duration-btn" data-duration="30">30s</button>
+                    <button class="duration-btn" data-duration="45">45s</button>
+                    <button class="duration-btn" data-duration="60">60s</button>
                 </div>
             </div>
-        </section>
 
-        <!-- Subtitle Settings -->
-        <section class="card hidden" id="subtitleCard">
-            <h2 class="section-title">💬 Subtitle Style</h2>
-            
-            <div class="option-group">
-                <label class="option-label">Preset Style</label>
-                <div class="subtitle-presets" role="radiogroup" aria-label="Select subtitle style">
-                    <button class="preset-btn active" data-preset="modern" role="radio" aria-checked="true">
-                        <div class="preset-preview">Modern</div>
-                        <small>Clean & bold</small>
-                    </button>
-                    <button class="preset-btn" data-preset="gaming" role="radio" aria-checked="false">
-                        <div class="preset-preview gaming">Gaming</div>
-                        <small>Bright outline</small>
-                    </button>
-                    <button class="preset-btn" data-preset="minimal" role="radio" aria-checked="false">
-                        <div class="preset-preview minimal">Minimal</div>
-                        <small>Simple text</small>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Generate Button -->
-        <section class="card hidden" id="generateCard">
-            <button class="btn primary large" id="generateBtn" aria-describedby="generate-desc">
+            <button class="btn primary" id="generateBtn">
                 ✨ Generate Viral Short
             </button>
-            <p class="generate-note" id="generate-desc">AI will create the perfect clip with smart cropping</p>
         </section>
 
-        <!-- Results Section -->
+        <!-- Results -->
         <section class="card hidden" id="resultCard">
             <h2 class="section-title">🎉 Your Viral Short is Ready!</h2>
             
-            <div class="result-preview">
-                <video class="final-video" id="finalVideo" controls playsinline aria-label="Final processed video"></video>
-                
-                <div class="ai-insights">
-                    <h3 class="insights-title">🧠 AI Analysis Results</h3>
-                    <div class="insight-item">
-                        <span class="insight-label">Best Moment:</span>
-                        <span class="insight-value" id="bestMoment">--</span>
-                    </div>
-                    <div class="insight-item">
-                        <span class="insight-label">Engagement Score:</span>
-                        <span class="insight-value" id="engagementScore">--/100</span>
-                    </div>
-                    <div class="insight-item">
-                        <span class="insight-label">Retention Prediction:</span>
-                        <span class="insight-value" id="retentionPrediction">--%</span>
-                    </div>
+            <video id="finalVideo" controls playsinline></video>
+            
+            <div class="ai-insights">
+                <div class="insight-item">
+                    <span>Best Moment:</span>
+                    <span id="bestMoment">--</span>
+                </div>
+                <div class="insight-item">
+                    <span>Engagement Score:</span>
+                    <span id="engagementScore">--/100</span>
+                </div>
+                <div class="insight-item">
+                    <span>Viral Potential:</span>
+                    <span id="viralPotential">--%</span>
                 </div>
             </div>
             
             <div class="download-section">
-                <button class="btn primary" id="downloadBtn">
-                    📱 Save to Device
-                </button>
-                <div class="quick-share">
-                    <button class="share-btn" data-platform="tiktok" aria-label="Share to TikTok">
-                        <span class="platform-icon" aria-hidden="true">🎵</span>
-                        TikTok
-                    </button>
-                    <button class="share-btn" data-platform="youtube" aria-label="Share to YouTube">
-                        <span class="platform-icon" aria-hidden="true">📺</span>
-                        YouTube
-                    </button>
-                    <button class="share-btn" data-platform="instagram" aria-label="Share to Instagram">
-                        <span class="platform-icon" aria-hidden="true">📸</span>
-                        Instagram
-                    </button>
+                <button class="btn primary" id="downloadBtn">📱 Download Video</button>
+                
+                <div class="share-buttons">
+                    <button class="share-btn" data-platform="tiktok">🎵 TikTok</button>
+                    <button class="share-btn" data-platform="instagram">📸 Instagram</button>
+                    <button class="share-btn" data-platform="youtube">📺 YouTube</button>
                 </div>
             </div>
-        </section>
 
-        <!-- Sound Recommendations -->
-        <section class="card hidden" id="soundsCard">
-            <h2 class="section-title">🎵 Recommended Sounds</h2>
-            <div id="recommendedSounds" role="list"></div>
+            <div class="viral-content">
+                <h3>📝 Generated Content</h3>
+                <div class="content-box">
+                    <strong id="viralTitle">Amazing Content!</strong>
+                    <p id="viralHashtags">#Viral #Trending #ForYou</p>
+                </div>
+            </div>
         </section>
     </div>
 
     <!-- Processing Overlay -->
-    <div class="processing-overlay" id="processingOverlay" role="dialog" aria-modal="true" aria-labelledby="processing-title">
-        <div class="processing-content">
-            <div class="ai-brain" aria-hidden="true">🧠</div>
-            <h3 class="processing-title" id="processing-title">AI Processing...</h3>
-            <p class="processing-status" id="processingStatus" aria-live="polite">Starting video analysis</p>
-            <div class="processing-steps" id="processingSteps" aria-live="polite"></div>
+    <div class="overlay" id="processingOverlay">
+        <div class="overlay-content">
+            <div class="spinner">🧠</div>
+            <h3>AI Processing...</h3>
+            <p id="processingStatus">Analyzing your video...</p>
         </div>
     </div>
 
-    <!-- Download Progress -->
-    <div class="download-overlay hidden" id="downloadOverlay" role="dialog" aria-modal="true">
-        <div class="download-content">
-            <div class="download-icon" aria-hidden="true">📱</div>
-            <h3>Preparing Download...</h3>
-            <div class="download-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                <div class="download-fill"></div>
-            </div>
-            <p>Your video will download automatically</p>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <!-- Initialize App -->
+    <script type="module">
+        try {
+            // Load FFmpeg modules
+            const { FFmpeg } = await import('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js');
+            const { toBlobURL } = await import('https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/index.js');
+            
+            // Make available globally
+            window.FFmpeg = FFmpeg;
+            window.toBlobURL = toBlobURL;
+            
+            console.log('✅ Libraries loaded successfully');
+            
+            // Load main app script
+            const script = document.createElement('script');
+            script.src = 'script.js';
+            script.onload = () => console.log('✅ ShortCraft script loaded');
+            script.onerror = () => console.error('❌ Failed to load script.js');
+            document.head.appendChild(script);
+            
+        } catch (error) {
+            console.error('❌ Library loading failed:', error);
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 50px; color: white;">
+                    <h2>⚠️ Loading Error</h2>
+                    <p>Failed to load required libraries. Please refresh the page.</p>
+                    <button onclick="location.reload()" style="padding: 10px 20px; margin-top: 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Refresh Page</button>
+                </div>
+            `;
+        }
+    </script>
 </body>
 </html>
